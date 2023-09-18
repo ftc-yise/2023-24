@@ -25,7 +25,7 @@ public class FieldOrientation extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    public float speedmulti = 1;
+    public float speedmulti = 0.2f;
     public float Yout = 0;
 
     IMU imu;
@@ -110,9 +110,12 @@ public class FieldOrientation extends LinearOpMode {
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             //double vertical   = -gamepad1.right_stick_x;  // Note: pushing stick forward gives negative value
-            double horizontal =  -gamepad1.left_stick_x;
-            double vertical     =  gamepad1.left_stick_y;
+            double horizontal =  gamepad1.left_stick_x * -1;
+            double vertical     =  gamepad1.left_stick_y * -1;
             double turn     =  gamepad1.right_stick_x;
+
+
+
 
 
 
@@ -152,8 +155,8 @@ public class FieldOrientation extends LinearOpMode {
             //double VerticalOut = Math.sin(theta);
 
 
-            double VerticalOut = /*Math.toDegrees(vertical * Math.sin(theta) - */vertical * (Math.cos(Math.toRadians(theta)))/*)*/;
-            double HorizontalOut = Math.toDegrees(horizontal * Math.cos(theta) - horizontal * Math.sin(theta));
+            double HorizontalOut = horizontal * Math.cos(Math.toRadians(theta)) - vertical * (Math.sin(Math.toRadians(theta)));
+            double VerticalOut = vertical * Math.cos(Math.toRadians(theta)) + horizontal * Math.sin(Math.toRadians(theta));
 
 
             double leftFrontPower  = VerticalOut - HorizontalOut - turn * speedmulti;
@@ -205,8 +208,8 @@ public class FieldOrientation extends LinearOpMode {
 
             telemetry.addData("theta", "%.2f Deg. (Heading)", theta);
 
-            telemetry.addData("horizontal", gamepad1.left_stick_x);
-            telemetry.addData("vertical", gamepad1.left_stick_y);
+            telemetry.addData("horizontal", gamepad1.left_stick_x * -1);
+            telemetry.addData("vertical", gamepad1.left_stick_y * -1);
             telemetry.addData("turn", gamepad1.right_stick_x);
 
 
