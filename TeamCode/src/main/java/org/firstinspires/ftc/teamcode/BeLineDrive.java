@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@TeleOp(name="Center Stage" +
-        "", group="Linear Opmode")
+@TeleOp(name="Beeline", group="Linear Opmode")
 public class BeLineDrive extends LinearOpMode {
 
 

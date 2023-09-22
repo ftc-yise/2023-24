@@ -11,8 +11,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
 
-@TeleOp(name="Center Stage" +
-        "", group="Linear Opmode")
+@TeleOp(name="Center Stage" + "", group="Linear Opmode")
 public class CompBotDrive extends LinearOpMode {
 
 

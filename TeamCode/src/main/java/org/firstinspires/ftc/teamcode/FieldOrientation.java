@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-
+import org.opencv.core.Mat;
 
 
 @TeleOp(name="FieldOrientation", group="Linear Opmode")
@@ -25,22 +25,16 @@ public class FieldOrientation extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    public float speedmulti = 0.2f;
-    public float Yout = 0;
+    private float speedMulti = 0.25f;
+    private boolean canChangeSpeeds = true;
 
-    IMU imu;
-
-
-    //private Servo fireServo = null;
-    //private CRServo barrel = null;
-    TouchSensor limit;
+    private IMU imu;
 
     @Override
     public void runOpMode() {
 
 
-        // Initialize the hardware variables. Note that the strings used here must correspond
-        // to the names assigned during the robot configuration step on the DS or RC devices.
+        //Initialize hardware
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "LeftFrontDrive");
         leftBackDrive  = hardwareMap.get(DcMotor.class, "LeftBackDrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "RightFrontDrive");
@@ -48,23 +42,13 @@ public class FieldOrientation extends LinearOpMode {
         imu = hardwareMap.get(IMU.class, "imu");
 
 
-        // Most robots need the motors on one side to be reversed to drive forward.
-        // When you first test your robot, push the left joystick forward
-        // and flip the direction ( FORWARD <-> REVERSE ) of any wheel that runs backwards
+        //Set motor direction
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        //fireServo.setDirection(Servo.Direction.FORWARD);
-        // Wait for the game to start (driver presses PLAY)
+
         telemetry.addData("Status", "Initialized");
-
-        /*if (limit.isPressed()) {
-            leftFrontDrive.setPower(0);
-        } else { // Otherwise, run the motor
-            leftFrontDrive.setPower(1);
-        }*/
-
 
         telemetry.update();
 
@@ -85,18 +69,22 @@ public class FieldOrientation extends LinearOpMode {
         // Note: if you choose two conflicting directions, this initialization will cause a code exception.
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
+        imu.resetYaw();
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Hub orientation", "Logo=%s   USB=%s\n ", logoDirection, usbDirection);
 
 
-
-
-
-            if(gamepad1.y && speedmulti == 1){
-                speedmulti = .25f;
-            } else if(gamepad1.y && speedmulti == .5f){
-                speedmulti = 1f;
+            if(gamepad1.y && canChangeSpeeds){
+                canChangeSpeeds = false;
+                if (speedMulti == 0.25) {
+                    speedMulti = 1;
+                } else if (speedMulti == 1) {
+                    speedMulti = 0.25f;
+                }
+            } else if (!gamepad1.y) {
+                canChangeSpeeds = true;
             }
 
             telemetry.addData("motor PowerLB:", leftBackDrive.getPower());
@@ -105,41 +93,25 @@ public class FieldOrientation extends LinearOpMode {
             telemetry.addData("motor PowerRB:", rightBackDrive.getPower());
 
 
-            double max;
+
+            //Angle returns -pi to pi, we need 0 to 2pi, so add pi to result
+            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+            double theta = orientation.getYaw(AngleUnit.RADIANS) + Math.PI;
 
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             //double vertical   = -gamepad1.right_stick_x;  // Note: pushing stick forward gives negative value
+
             double horizontal =  gamepad1.left_stick_x * -1;
             double vertical     =  gamepad1.left_stick_y * -1;
-            double turn     =  gamepad1.right_stick_x;
+            double turn = 0;
 
+            if (gamepad1.b && theta % (Math.PI/2) > 0.01) {
+                turn = (theta % (Math.PI/2)) * 2;
+            } else if (!gamepad1.b) {
+                turn = gamepad1.right_stick_x;
+            }
 
-
-
-
-
-            // Combine the joystick requests for each axis-motion to determine each wheel's power.
-            // Set up a variable for each drive wheel to save the power level for telemetry.
-            /*double leftFrontPower  = vertical - horizontal - turn * speedmulti;
-            double rightFrontPower = vertical + horizontal + turn * speedmulti;
-            double leftBackPower   = vertical + horizontal - turn * speedmulti;
-            double rightBackPower  = vertical - horizontal + turn * speedmulti;*/
-
-            // Normalize the values so no wheel power exceeds 100%
-            // This ensures that the robot maintains the desired motion.
-            /*max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-            max = Math.max(max, Math.abs(leftBackPower));
-            max = Math.max(max, Math.abs(rightBackPower));*/
-
-            
-
-            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-            AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
-
-
-
-            double theta = orientation.getYaw(AngleUnit.DEGREES);
 
             if (gamepad1.a) {
                 telemetry.addData("Yaw", "Resetting\n");
@@ -148,52 +120,15 @@ public class FieldOrientation extends LinearOpMode {
                 telemetry.addData("Yaw", "Press A (triangle) on Gamepad to reset\n");
             }
 
-            theta = theta +180;
+
+            double horizontalOut = (horizontal * Math.cos(theta)) - (vertical * Math.sin(theta));
+            double verticalOut = (vertical * Math.cos(theta)) + (horizontal * Math.sin(theta));
 
 
-
-
-            double HorizontalOut = horizontal * Math.cos(Math.toRadians(theta)) - vertical * (Math.sin(Math.toRadians(theta)));
-            double VerticalOut = vertical * Math.cos(Math.toRadians(theta)) + horizontal * Math.sin(Math.toRadians(theta));
-
-
-            double leftFrontPower  = VerticalOut - HorizontalOut - turn * speedmulti;
-            double rightFrontPower = VerticalOut + HorizontalOut + turn * speedmulti;
-            double leftBackPower   = VerticalOut + HorizontalOut - turn * speedmulti;
-            double rightBackPower  = VerticalOut - HorizontalOut + turn * speedmulti;
-
-
-            /*max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-            max = Math.max(max, Math.abs(leftBackPower));
-            max = Math.max(max, Math.abs(rightBackPower));
-
-
-            //YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-
-            if (max > 1.0) {
-                leftFrontPower  /= max;
-                rightFrontPower /= max;
-                leftBackPower   /= max;
-                rightBackPower  /= max;
-            }*/
-
-
-
-
-
-
-
-            // This is test code:
-            //
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
-
-
+            double leftFrontPower  = (verticalOut - horizontalOut - turn) * speedMulti;
+            double rightFrontPower = (verticalOut + horizontalOut + turn) * speedMulti;
+            double leftBackPower   = (verticalOut + horizontalOut - turn) * speedMulti;
+            double rightBackPower  = (verticalOut - horizontalOut + turn) * speedMulti;
 
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
@@ -202,37 +137,14 @@ public class FieldOrientation extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower);
 
 
+            telemetry.addData("Heading", "%.2f Radians", theta);
 
+            telemetry.addData("Horizontal input", gamepad1.left_stick_x * -1);
+            telemetry.addData("Vertical input: ", gamepad1.left_stick_y * -1);
+            telemetry.addData("Turn input: ", gamepad1.right_stick_x);
+            telemetry.addData("Hertical out: ", verticalOut);
+            telemetry.addData("Vorizontal out: ", horizontalOut);
 
-            telemetry.addData("theta", "%.2f Deg. (Heading)", theta);
-
-            telemetry.addData("horizontal", gamepad1.left_stick_x * -1);
-            telemetry.addData("vertical", gamepad1.left_stick_y * -1);
-            telemetry.addData("turn", gamepad1.right_stick_x);
-
-
-            telemetry.addData("verticle out", VerticalOut);
-            telemetry.addData("horizontal out", HorizontalOut);
-
-
-            telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", orientation.getYaw(AngleUnit.DEGREES) + 180);
-          /*  telemetry.addData("Pitch (X)", "%.2f Deg.", orientation.getPitch(AngleUnit.DEGREES));
-            telemetry.addData("Roll (Y)", "%.2f Deg.\n", orientation.getRoll(AngleUnit.DEGREES));
-            telemetry.addData("Yaw (Z) velocity", "%.2f Deg/Sec", angularVelocity.zRotationRate);
-            telemetry.addData("Pitch (X) velocity", "%.2f Deg/Sec", angularVelocity.xRotationRate);
-            telemetry.addData("Roll (Y) velocity", "%.2f Deg/Sec", angularVelocity.yRotationRate);*/
-            telemetry.update();
-
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            /*telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);*/
-            //telemetry.addData("limitSwitchState", limitSwitchState);
-
-
-            //telemetry.addData("CR positon",fireServo.getPosition());
-            //telemetry.addData("CR class",fireServo.getClass());
             telemetry.update();
         }
     }}
