@@ -152,8 +152,6 @@ public class FieldOrientation extends LinearOpMode {
 
 
 
-            //double VerticalOut = Math.sin(theta);
-
 
             double HorizontalOut = horizontal * Math.cos(Math.toRadians(theta)) - vertical * (Math.sin(Math.toRadians(theta)));
             double VerticalOut = vertical * Math.cos(Math.toRadians(theta)) + horizontal * Math.sin(Math.toRadians(theta));
