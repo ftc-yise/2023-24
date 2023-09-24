@@ -27,6 +27,7 @@ public class FieldOrientation extends LinearOpMode {
 
     private float speedMulti = 0.25f;
     private boolean canChangeSpeeds = true;
+    private float looptime = 0f;
 
     private IMU imu;
 
@@ -75,13 +76,14 @@ public class FieldOrientation extends LinearOpMode {
         while (opModeIsActive()) {
             telemetry.addData("Hub orientation", "Logo=%s   USB=%s\n ", logoDirection, usbDirection);
 
+            looptime = looptime + 1;
 
             if(gamepad1.y && canChangeSpeeds){
                 canChangeSpeeds = false;
-                if (speedMulti == 0.25) {
+                if (speedMulti == 0.75) {
                     speedMulti = 1;
                 } else if (speedMulti == 1) {
-                    speedMulti = 0.25f;
+                    speedMulti = 0.75f;
                 }
             } else if (!gamepad1.y) {
                 canChangeSpeeds = true;
@@ -106,11 +108,29 @@ public class FieldOrientation extends LinearOpMode {
             double vertical     =  gamepad1.left_stick_y * -1;
             double turn = 0;
 
-            if (gamepad1.b && theta % (Math.PI/2) > 0.01) {
+            /*if (gamepad1.b && theta % (Math.PI/2) > 0.01) {
                 turn = (theta % (Math.PI/2)) * 2;
             } else if (!gamepad1.b) {
                 turn = gamepad1.right_stick_x;
+            }*/
+
+            if (gamepad1.dpad_up && theta > 3.2 ) {
+                turn = -1;
+            }else if (gamepad1.dpad_up && theta < 3.08) {
+                turn = 1;
             }
+
+
+            //this is nates idea to have preset directions
+           /* if (gamepad1.dpad_right && theta / (Math.PI) > 0.01) {
+                turn = (theta % (Math.PI));
+            }else if (gamepad1.dpad_down && theta % (Math.PI * 1.5) > 0.01) {
+                turn = (theta % (Math.PI * 1.5)) * 2;
+            }else if (gamepad1.dpad_left && theta % (Math.PI*2) > 0.01) {
+                turn = (theta % (Math.PI * 2)) * 2;
+            } else if (!gamepad1.dpad_down && !gamepad1.dpad_up && !gamepad1.dpad_right && !gamepad1.dpad_left) {
+                turn = gamepad1.right_stick_x;
+            }*/
 
 
             if (gamepad1.a) {
@@ -144,6 +164,7 @@ public class FieldOrientation extends LinearOpMode {
             telemetry.addData("Turn input: ", gamepad1.right_stick_x);
             telemetry.addData("Hertical out: ", verticalOut);
             telemetry.addData("Vorizontal out: ", horizontalOut);
+            telemetry.addData("looptime", looptime);
 
             telemetry.update();
         }
