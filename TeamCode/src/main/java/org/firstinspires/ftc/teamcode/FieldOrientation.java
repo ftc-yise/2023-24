@@ -29,6 +29,11 @@ public class FieldOrientation extends LinearOpMode {
     private boolean canChangeSpeeds = true;
     private float looptime = 0f;
 
+    public float pi = 3.14159f;
+
+    private double AngleA = pi / 2;
+    private double DeadzoneA = 0.12;
+
     private IMU imu;
 
     @Override
@@ -114,11 +119,18 @@ public class FieldOrientation extends LinearOpMode {
                 turn = gamepad1.right_stick_x;
             }*/
 
-            if (gamepad1.dpad_up && theta > 3.2 ) {
-                turn = -1;
-            }else if (gamepad1.dpad_up && theta < 3.08) {
-                turn = 1;
+            if (gamepad1.dpad_up && theta > AngleA + DeadzoneA) {
+                turn = (((theta - AngleA) - DeadzoneA) * 4 / -3.14);
+                //needs to end in positive value
+                //turn = -.65;
+            }else if (gamepad1.dpad_up && theta < AngleA + DeadzoneA) {
+                turn = (((theta - AngleA) - DeadzoneA) * 4 / 3.14);
+                //needs to end in negative value
+                //turn = .65;
+            } else if (!gamepad1.dpad_down && !gamepad1.dpad_up && !gamepad1.dpad_right && !gamepad1.dpad_left) {
+                turn = gamepad1.right_stick_x;
             }
+
 
 
             //this is nates idea to have preset directions
