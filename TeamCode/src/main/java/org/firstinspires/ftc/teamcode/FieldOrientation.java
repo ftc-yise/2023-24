@@ -124,7 +124,12 @@ public class FieldOrientation extends LinearOpMode {
                 //needs to end in positive value
                 //turn = -.65;
             }else if (gamepad1.dpad_up && theta < AngleA + DeadzoneA) {
+                //CURRENT VERSION of the auto lock code
                 turn = (((theta - AngleA) - DeadzoneA) * 4 / 3.14);
+
+               /*turn = turn + (((theta - AngleA) - DeadzoneA) * 4 / 3.14);
+                 turn = turn * -1
+                */
                 //needs to end in negative value
                 //turn = .65;
             } else if (!gamepad1.dpad_down && !gamepad1.dpad_up && !gamepad1.dpad_right && !gamepad1.dpad_left) {
