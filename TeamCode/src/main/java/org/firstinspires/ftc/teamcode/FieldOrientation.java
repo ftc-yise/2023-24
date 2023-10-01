@@ -25,7 +25,7 @@ public class FieldOrientation extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    private float speedMulti = 0.25f;
+    private float speedMulti = 1f;
     private boolean canChangeSpeeds = true;
     private float looptime = 0f;
 
@@ -85,10 +85,10 @@ public class FieldOrientation extends LinearOpMode {
 
             if(gamepad1.y && canChangeSpeeds){
                 canChangeSpeeds = false;
-                if (speedMulti == 0.75) {
+                if (speedMulti == 0.4) {
                     speedMulti = 1;
                 } else if (speedMulti == 1) {
-                    speedMulti = 0.75f;
+                    speedMulti = 0.4f;
                 }
             } else if (!gamepad1.y) {
                 canChangeSpeeds = true;
@@ -111,7 +111,9 @@ public class FieldOrientation extends LinearOpMode {
 
             double horizontal =  gamepad1.left_stick_x * -1;
             double vertical     =  gamepad1.left_stick_y * -1;
-            double turn = 0;
+            double turnR = 0;
+            double turnL = 0;
+
 
             /*if (gamepad1.b && theta % (Math.PI/2) > 0.01) {
                 turn = (theta % (Math.PI/2)) * 2;
@@ -120,12 +122,12 @@ public class FieldOrientation extends LinearOpMode {
             }*/
 
             if (gamepad1.dpad_up && theta > AngleA + DeadzoneA) {
-                turn = (((theta - AngleA) - DeadzoneA) * 4 / -3.14);
+                turnR = (((theta - AngleA) - DeadzoneA) * 4 / -3.14);
                 //needs to end in positive value
                 //turn = -.65;
             }else if (gamepad1.dpad_up && theta < AngleA + DeadzoneA) {
                 //CURRENT VERSION of the auto lock code
-                turn = (((theta - AngleA) - DeadzoneA) * 4 / 3.14);
+                turnL = (((theta - AngleA) - DeadzoneA) * 4 / 3.14);
 
                /*turn = turn + (((theta - AngleA) - DeadzoneA) * 4 / 3.14);
                  turn = turn * -1
@@ -133,7 +135,7 @@ public class FieldOrientation extends LinearOpMode {
                 //needs to end in negative value
                 //turn = .65;
             } else if (!gamepad1.dpad_down && !gamepad1.dpad_up && !gamepad1.dpad_right && !gamepad1.dpad_left) {
-                turn = gamepad1.right_stick_x;
+                turnR = gamepad1.right_stick_x;
             }
 
 
@@ -162,10 +164,10 @@ public class FieldOrientation extends LinearOpMode {
             double verticalOut = (vertical * Math.cos(theta)) + (horizontal * Math.sin(theta));
 
 
-            double leftFrontPower  = (verticalOut - horizontalOut - turn) * speedMulti;
-            double rightFrontPower = (verticalOut + horizontalOut + turn) * speedMulti;
-            double leftBackPower   = (verticalOut + horizontalOut - turn) * speedMulti;
-            double rightBackPower  = (verticalOut - horizontalOut + turn) * speedMulti;
+            double leftFrontPower  = (verticalOut - horizontalOut - turnR + turnL) * speedMulti;
+            double rightFrontPower = (verticalOut + horizontalOut + turnR - turnL) * speedMulti;
+            double leftBackPower   = (verticalOut + horizontalOut - turnR + turnL) * speedMulti;
+            double rightBackPower  = (verticalOut - horizontalOut + turnR - turnL) * speedMulti;
 
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);

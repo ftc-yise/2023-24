@@ -22,7 +22,7 @@ public class CompBotDrive extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    public float speedmulti = 1;
+    public float speedmulti = .4f;
     public float Yout = 0;
 
 
@@ -79,8 +79,8 @@ public class CompBotDrive extends LinearOpMode {
             }*/
 
             if(gamepad1.y && speedmulti == 1){
-                speedmulti = .5f;
-            } else if(gamepad1.y && speedmulti == .5f){
+                speedmulti = .4f;
+            } else if(gamepad1.y && speedmulti == .4f){
                 speedmulti = 1f;
             }
 
