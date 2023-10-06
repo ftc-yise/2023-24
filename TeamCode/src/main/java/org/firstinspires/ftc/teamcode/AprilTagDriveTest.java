@@ -44,6 +44,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.opencv.core.Mat;
 
 import java.util.List;
 
@@ -107,9 +108,9 @@ public class AprilTagDriveTest extends LinearOpMode {
 
         //Set motor directions (don't change if robot drives properly)
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         initAprilTag();
 
@@ -121,19 +122,41 @@ public class AprilTagDriveTest extends LinearOpMode {
 
         // Run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double forward = -gamepad1.left_stick_x;
-            double strafe  = gamepad1.left_stick_y;
+            double forward = -gamepad1.left_stick_y;
+            double strafe  = gamepad1.left_stick_x;
             double turn    = gamepad1.right_stick_x;
 
-            //Use math created by someone smart to determine power for each wheel
-            double leftFrontPower  = forward - strafe + turn;
-            double rightFrontPower = forward + strafe - turn;
-            double leftBackPower   = forward - strafe - turn;
-            double rightBackPower  = forward + strafe + turn;
 
+
+            //Use april tag to center robot
+            double[] centeringAdjustments = getAprilTagDetections();
+            if (gamepad1.b) {
+                //Set movements to calculated values from the april tag
+                forward = centeringAdjustments[0];
+                strafe = centeringAdjustments[1];
+                turn = centeringAdjustments[2];
+
+                if (forward > 1) {
+                    forward = 1;
+                } else if (strafe > 1) {
+                    strafe = 1;
+                } else if (turn > 1) {
+                    turn = 1;
+                }
+            }
+
+
+
+            //Use math created by someone smart to determine power for each wheel
+            double leftFrontPower  = forward + strafe + turn;
+            double rightFrontPower = forward - strafe - turn;
+            double leftBackPower   = forward - strafe + turn;
+            double rightBackPower  = forward + strafe - turn;
+
+
+            //Change between slow and full speed
             if (gamepad1.y && canChangeSpeeds) {
                 canChangeSpeeds = false;
                 if (currentSpeed == fullSpeed) {
@@ -145,13 +168,13 @@ public class AprilTagDriveTest extends LinearOpMode {
                 canChangeSpeeds = true;
             }
 
+
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
 
-            getAprilTagDetections();
         }
 
         visionPortal.close();
@@ -195,7 +218,11 @@ public class AprilTagDriveTest extends LinearOpMode {
 
 
 
-    private void getAprilTagDetections() {
+    private double[] getAprilTagDetections() {
+
+        double computedForward = 0;
+        double computedStrafe = 0;
+        double computedTurn = 0;
 
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
@@ -203,9 +230,15 @@ public class AprilTagDriveTest extends LinearOpMode {
         // Step through the list of detections and display info for each one.
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
-                if (detection.metadata.name == "BlueAllianceRight") {
-                    if (detection.ftcPose.yaw < 0.1) {
-
+                if (detection.metadata.name == "BlueAllianceCenter") {
+                    /*if (detection.ftcPose.bearing < -1) {
+                        computedTurn = -detection.ftcPose.bearing/50;
+                    } else if (detection.ftcPose.bearing > 1) {
+                        computedTurn = -detection.ftcPose.bearing/50;
+                    }*/
+                    computedStrafe = -detection.ftcPose.x/10;
+                    if (computedStrafe < 0.1 && computedStrafe > 0.1) {
+                        computedTurn = -detection.ftcPose.yaw / 50;
                     }
                 }
 
@@ -225,6 +258,8 @@ public class AprilTagDriveTest extends LinearOpMode {
         telemetry.addLine("RBE = Range, Bearing & Elevation");
         telemetry.update();
 
+        double computedValues[] = {computedForward, computedStrafe, computedTurn};
 
+        return computedValues;
     }
 }

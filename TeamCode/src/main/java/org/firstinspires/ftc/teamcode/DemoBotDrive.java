@@ -17,7 +17,7 @@ public class DemoBotDrive extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    private double slowSpeed = 0.25;
+    private double slowSpeed = 0.4;
     private double fullSpeed = 1;
     private double currentSpeed = 1;
     private boolean canChangeSpeeds = true;
@@ -34,9 +34,9 @@ public class DemoBotDrive extends LinearOpMode {
 
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
         runtime.reset();
@@ -46,16 +46,16 @@ public class DemoBotDrive extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double forward   = -gamepad1.left_stick_x;  // Note: pushing stick forward gives negative value
-            double strafe =  gamepad1.left_stick_y;
+            double forward   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double strafe =  gamepad1.left_stick_x;
             double turn     =  gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower  = forward - strafe + turn;
-            double rightFrontPower = forward + strafe - turn;
-            double leftBackPower   = forward - strafe - turn;
-            double rightBackPower  = forward + strafe + turn;
+            double leftFrontPower  = forward + strafe + turn;
+            double rightFrontPower = forward - strafe - turn;
+            double leftBackPower   = forward - strafe + turn;
+            double rightBackPower  = forward + strafe - turn;
 
             if (gamepad1.y && canChangeSpeeds) {
                 canChangeSpeeds = false;
