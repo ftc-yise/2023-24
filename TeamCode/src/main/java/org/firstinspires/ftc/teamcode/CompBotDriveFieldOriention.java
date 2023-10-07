@@ -15,8 +15,8 @@ import org.opencv.core.Mat;
 
 
 
-@TeleOp(name="FieldOrientation", group="Linear Opmode")
-public class FieldOrientation extends LinearOpMode {
+@TeleOp(name="Romeo Drive Field Oriention", group="Linear Opmode")
+public class CompBotDriveFieldOriention extends LinearOpMode {
 
 
     // Declare OpMode members for each of the 4 motors.
@@ -26,18 +26,15 @@ public class FieldOrientation extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-
     private float speedMulti = 1f;
     private boolean canChangeSpeeds = true;
     private float looptime = 0f;
 
     public double pi = Math.PI;
 
-    public double piOverTwo = Math.PI/2;
-
     private double AngleA = pi;
     //private double DeadzoneA = 0.12; original value of dead zone
-    private double DeadzoneA = .06;
+    private double DeadzoneA = .12;
 
     private IMU imu;
 
@@ -46,10 +43,10 @@ public class FieldOrientation extends LinearOpMode {
 
 
         //Initialize hardware
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "LeftFrontDrive");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "LeftBackDrive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "RightFrontDrive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "RightBackDrive");
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
+        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "Right_front_drive");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "Right_back_drive");
         imu = hardwareMap.get(IMU.class, "imu");
 
 
@@ -71,8 +68,8 @@ public class FieldOrientation extends LinearOpMode {
          *
          * To Do:  EDIT these two lines to match YOUR mounting configuration.
          */
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
@@ -127,12 +124,16 @@ public class FieldOrientation extends LinearOpMode {
             }*/
 
             if (gamepad1.dpad_up && theta > AngleA + DeadzoneA) {
-                turnR = (((theta - AngleA) - DeadzoneA) / -piOverTwo);
+                turnR = (((theta - AngleA) - DeadzoneA) / -3.14);
                 //needs to end in positive value
                 //turnR = 1;
             }else if (gamepad1.dpad_up && theta < AngleA - DeadzoneA) {
                 //CURRENT VERSION of the auto lock code
-                turnL = (((theta - AngleA) - DeadzoneA) / piOverTwo);
+                turnL = (((theta - AngleA) - DeadzoneA) / 3.14);
+
+               /*turn = turn + (((theta - AngleA) - DeadzoneA) * 4 / 3.14);*/
+                //turnL = -1;
+
                 //needs to end in negative value
                 //turn = .65;
             } else if (!gamepad1.dpad_down && !gamepad1.dpad_up && !gamepad1.dpad_right && !gamepad1.dpad_left) {
