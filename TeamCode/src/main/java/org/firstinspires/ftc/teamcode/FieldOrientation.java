@@ -14,7 +14,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.opencv.core.Mat;
 
 
-
 @TeleOp(name="FieldOrientation", group="Linear Opmode")
 public class FieldOrientation extends LinearOpMode {
 
