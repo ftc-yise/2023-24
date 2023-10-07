@@ -50,8 +50,8 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Kids easy drive one stick", group="Linear OpMode")
-public class DemoBotDriveOneStick extends LinearOpMode {
+@TeleOp(name="Romeo one stick drive", group="Linear OpMode")
+public class RomeoOneStickDrive extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();

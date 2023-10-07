@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Kids easy drive", group="Linear OpMode")
-public class DemoBotDrive extends LinearOpMode {
+@TeleOp(name="Romeo strafe drive", group="Linear OpMode")
+public class RomeoStrafeDrive extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
