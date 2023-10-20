@@ -17,7 +17,6 @@ public class centerStage extends LinearOpMode {
 
     public boolean canSwitchModes = false;
 
-
     @Override
     public void runOpMode() {
 
