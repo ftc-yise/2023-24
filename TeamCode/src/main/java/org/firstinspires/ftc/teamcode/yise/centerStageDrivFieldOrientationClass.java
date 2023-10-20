@@ -113,21 +113,31 @@ public class centerStageDrivFieldOrientationClass {
         }
 
         // Assign human readable names to the stick inputs
-        // Note: Pushing the stick forward gives a negative value, so we have to invert it
         vertical = gamepad.left_stick_y;
         horizontal = gamepad.left_stick_x;
         turn = gamepad.right_stick_x;
 
 
+
+        //field orientation math switching motor inputs to field oriented outputs
         horizontalOut = (horizontal * Math.cos(theta)) - (vertical * Math.sin(theta));
         verticalOut = (vertical * Math.cos(theta)) + (horizontal * Math.sin(theta));
 
+        //note: vertical input is negative so we flip the output positive
         verticalOut = verticalOut * -1;
 
         leftFrontPower  = (verticalOut - horizontalOut - turn);
         rightFrontPower = (verticalOut + horizontalOut + turn);
         leftBackPower   = (verticalOut + horizontalOut - turn);
         rightBackPower  = (verticalOut - horizontalOut + turn);
+
+        //Implementation of having power to the motors to brake when not moving
+        if (vertical == 0 && horizontal == 0 && turn == 0){
+            leftFrontPower  = 0.01;
+            rightFrontPower = 0.01;
+            leftBackPower   = 0.01;
+            rightBackPower  = 0.01;
+        }
 
         // Normalize the power values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.

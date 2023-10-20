@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 //import team class
 import org.firstinspires.ftc.teamcode.yise.centerStageDrivClass;
-
+import org.firstinspires.ftc.teamcode.yise.centerStageDrivFieldOrientationClass;
+import org.firstinspires.ftc.teamcode.yise.liftArm;
 
 @TeleOp(name="Center Stage", group="Linear Opmode")
 public class centerStage extends LinearOpMode {
@@ -23,7 +24,8 @@ public class centerStage extends LinearOpMode {
 
         // create instance of drive class
         centerStageDrivClass drive = new centerStageDrivClass(hardwareMap);
-
+        // create instance of lift arm class
+        liftArm arm = new liftArm(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -50,6 +52,12 @@ public class centerStage extends LinearOpMode {
                 canSwitchModes = true;
             }
 
+            //if X or B bring the hand IN and OUT
+            if (gamepad2.x) {
+                arm.setHandPosition(liftArm.Hand.OUT);
+            } else if (gamepad2.b) {
+                arm.setHandPosition(liftArm.Hand.IN);
+            }
 
 // If we have any Dpad input, update the motor power based on Dpad (ie overright stick)
             if (gamepad1.dpad_right || gamepad1.dpad_left || gamepad1.dpad_up || gamepad1.dpad_down) {
@@ -58,6 +66,16 @@ public class centerStage extends LinearOpMode {
                 drive.updateMotorsFromStick(gamepad1);
             }
 
+            //the importation of the intake from class "lift arm"
+            arm.intakeSystem(gamepad2);
+
+            // Stop the slide and keep it from holding position
+            if (!arm.handStatusBusy()) {
+                arm.holdPositionHand();
+            }
+            //Data about the position of the Hand and the power going to the intake
+            telemetry.addData("Hand position", arm.getHandPosition());
+            telemetry.addData("intake power", arm.intakePower);
 
             telemetry.addData("Horizontal input", gamepad1.left_stick_x);
             telemetry.addData("Vertical input: ", gamepad1.left_stick_y);
