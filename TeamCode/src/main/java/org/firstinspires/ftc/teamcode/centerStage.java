@@ -18,7 +18,6 @@ public class centerStage extends LinearOpMode {
 
     public boolean canSwitchModes = false;
 
-
     @Override
     public void runOpMode() {
 
@@ -26,6 +25,8 @@ public class centerStage extends LinearOpMode {
         centerStageDrivClass drive = new centerStageDrivClass(hardwareMap);
         // create instance of lift arm class
         liftArm arm = new liftArm(hardwareMap);
+
+        arm.setHandPosition(liftArm.Hand.IN);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -67,15 +68,30 @@ public class centerStage extends LinearOpMode {
             }
 
             //the importation of the intake from class "lift arm"
-            arm.intakeSystem(gamepad2);
+            arm.intakeSystemIN(gamepad2);
+            arm.intakeSystemOUT(gamepad2);
+
+            if(gamepad2.dpad_up){
+                arm.setPoleHeight(liftArm.Heights.LOW);
+            } else if (gamepad2.dpad_down){
+                arm.returnToBottom();
+            }
+
+            if (gamepad2.left_bumper) {
+                arm.closeTrapdoor();
+            } else if (gamepad2.right_bumper) {
+                arm.openTrapdoor();
+            }
 
             // Stop the slide and keep it from holding position
             if (!arm.handStatusBusy()) {
                 arm.holdPositionHand();
             }
+
             //Data about the position of the Hand and the power going to the intake
             telemetry.addData("Hand position", arm.getHandPosition());
             telemetry.addData("intake power", arm.intakePower);
+            telemetry.addData("Slides Position", arm.getSlidePosition(liftArm.Sides.RIGHT));
 
             telemetry.addData("Horizontal input", gamepad1.left_stick_x);
             telemetry.addData("Vertical input: ", gamepad1.left_stick_y);

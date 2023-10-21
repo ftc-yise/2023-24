@@ -68,7 +68,8 @@ public class FieldOrientationClass extends LinearOpMode {
             drive.lockToRotation(gamepad1);
             }
 
-            arm.intakeSystem(gamepad2);
+            arm.intakeSystemIN(gamepad2);
+            arm.intakeSystemOUT(gamepad2);
 
             // Stop the slide and keep it from holding position
             if (!arm.handStatusBusy()) {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.yise;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class liftArm {
     public final DcMotor leftSlide, rightSlide, hand;
     public final DcMotor intake;
+    public final Servo trapdoor;
     public double intakePower;
     // Used to set pole height.
     public enum Heights {
@@ -19,6 +21,12 @@ public class liftArm {
     public enum Hand{
         IN,
         OUT
+    }
+
+    public trapdoorPositions trapdoorStatus;
+    public enum trapdoorPositions{
+        OPEN,
+        CLOSE
     }
 
     // Used to identify left and right slide motors
@@ -34,10 +42,15 @@ public class liftArm {
 
         intake = hardwareMap.get(DcMotor.class, "intake");
 
+        trapdoor = hardwareMap.get(Servo.class, "trapdoor");
+        trapdoor.setPosition(Servo.MIN_POSITION);
+        trapdoorStatus = trapdoorPositions.OPEN;
+
         hand.setDirection(DcMotor.Direction.FORWARD);
         leftSlide.setDirection(DcMotor.Direction.REVERSE);
         rightSlide.setDirection(DcMotor.Direction.FORWARD);
         intake.setDirection(DcMotor.Direction.REVERSE);
+
 
         hand.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -50,8 +63,8 @@ public class liftArm {
     public void setPoleHeight(Heights targetHeight) {
         switch (targetHeight) {
             case LOW:
-                leftSlide.setTargetPosition(850);
-                rightSlide.setTargetPosition(850);
+                leftSlide.setTargetPosition(1100);
+                rightSlide.setTargetPosition(1100);
                 break;
             case MEDIUM:
                 leftSlide.setTargetPosition(1400);
@@ -71,10 +84,10 @@ public class liftArm {
     public void setHandPosition(Hand targetPosition) {
         switch (targetPosition) {
             case IN:
-                hand.setTargetPosition(0);
+                hand.setTargetPosition(-5);
                 break;
             case OUT:
-                hand.setTargetPosition(-110);
+                hand.setTargetPosition(-105);
                 break;
         }
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -138,10 +151,19 @@ public class liftArm {
         hand.setPower(0.05);
     }
 
-    public void intakeSystem(Gamepad gamepad) {
+    public void intakeSystemIN(Gamepad gamepad) {
         if (gamepad.a){
             intakePower = 1;
         }else if (!gamepad.a){
+            intakePower = 0;
+        }
+        intake.setPower(intakePower);
+    }
+
+    public void intakeSystemOUT(Gamepad gamepad) {
+        if (gamepad.y){
+            intakePower = -1;
+        }else if (!gamepad.y){
             intakePower = 0;
         }
         intake.setPower(intakePower);
@@ -160,5 +182,14 @@ public class liftArm {
     public double getHandPosition() {
         double position = hand.getCurrentPosition();
         return position;
+    }
+
+    public void closeTrapdoor() {
+        trapdoor.setPosition(0.5);
+        trapdoorStatus = trapdoorPositions.CLOSE;
+    }
+    public void openTrapdoor() {
+        trapdoor.setPosition(Servo.MIN_POSITION);
+        trapdoorStatus = trapdoorPositions.OPEN;
     }
 }

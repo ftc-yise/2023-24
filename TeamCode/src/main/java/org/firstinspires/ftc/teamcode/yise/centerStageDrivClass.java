@@ -68,7 +68,6 @@ public class centerStageDrivClass {
         vertical = gamepad.left_stick_y;
         horizontal = gamepad.left_stick_x;
         turn = gamepad.right_stick_x;
-        turn = turn * 1;
 
         // Calculate individual motor power base on the stick input values
         leftFrontPower = vertical + horizontal - turn;
@@ -77,24 +76,8 @@ public class centerStageDrivClass {
         rightBackPower = vertical + horizontal + turn;
 
         //Implementation of having power to the motors to brake when not moving
-        if (vertical == 0 && horizontal == 0 && turn == 0){
-            if (vertical == 0){
-                leftFrontPower  = -0.01;
-                rightFrontPower = -0.01;
-                leftBackPower   = -0.01;
-                rightBackPower  = -0.01;
-            }else if (horizontal == 0){
-                leftFrontPower  = 0.01;
-                rightFrontPower = 0.01;
-                leftBackPower   = -0.01;
-                rightBackPower  = -0.01;
-            }else if (turn == 0){
-                leftFrontPower  = -0.01;
-                rightFrontPower = -0.01;
-                leftBackPower   = 0.01;
-                rightBackPower  = 0.01;
-            }
-        }
+
+
 
         // Normalize the power values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.
