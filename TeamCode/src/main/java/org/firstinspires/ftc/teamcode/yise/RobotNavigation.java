@@ -7,12 +7,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.util.Arrays;
 import java.util.List;
 
-
-public class centerStageDrivClass {
+public class RobotNavigation {
     // Note: we make these public so the calling code can access and use these variables
-    public final DcMotor leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive;
+    public DcMotor leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive;
     private List<DcMotor> motors;
     public double leftFrontPower, leftBackPower, rightFrontPower, rightBackPower;
+
+    double speedMultiplier;
+    double vertical, horizontal, turn;
+    double max;
 
 
     // Used to track slow-mode versus normal mode
@@ -23,10 +26,11 @@ public class centerStageDrivClass {
         NORMAL
     }
 
-
-    public centerStageDrivClass(HardwareMap hardwareMap) {
+    //Declare the constructor for the class
+    public RobotNavigation(HardwareMap hardwareMap) {
         // set default value for speed
         currentSpeed = Speeds.NORMAL;
+        speedMultiplier = 1;
 
         // Set the drive motor variables based on hardware config
         leftFrontDrive = hardwareMap.get(DcMotor.class, "LeftFrontDrive");
@@ -41,42 +45,22 @@ public class centerStageDrivClass {
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-        // Set default power for motors
-        leftFrontPower = 1;
-        leftBackPower = 1;
-        rightFrontPower = 1;
-        rightBackPower = 1;
     }
 
-    // Updates power to the 4 drive motors based on input from the stick on the first controller
+
     public void updateMotorsFromStick(Gamepad gamepad) {
-        float speedMultiplier;
-        double vertical, horizontal, turn;
-        double max;
 
-        // Set the default value of speedMultiplier for NORMAL mode
-        speedMultiplier = 1f;
-
-        // Set the speedMultiplier in case of SLOW mode
-        if (currentSpeed == Speeds.SLOW) {
-            speedMultiplier = 0.5f;
-        }
-
-        // Assign human readable names to the stick inputs
-        // Note: Pushing the stick forward gives a negative value, so we have to invert it
+        //Get stick inputs
         vertical = gamepad.left_stick_y;
         horizontal = gamepad.left_stick_x;
         turn = gamepad.right_stick_x;
+
 
         // Calculate individual motor power base on the stick input values
         leftFrontPower = vertical + horizontal - turn;
         rightFrontPower = vertical - horizontal + turn;
         leftBackPower = vertical - horizontal - turn;
         rightBackPower = vertical + horizontal + turn;
-
-        //Implementation of having power to the motors to brake when not moving
-
 
 
         // Normalize the power values so no wheel power exceeds 100%
@@ -98,49 +82,41 @@ public class centerStageDrivClass {
         rightBackDrive.setPower(rightBackPower * speedMultiplier);
     }
 
-    // Updates power to the 4 drive motors based on input from the stick on the first controller
     public void updateMotorsFromDpad(Gamepad gamepad) {
-        double power;
 
-        // Set default value for power
-        power = 1f;
-
-        // Set the power to send to the motors based on currentSpeed setting
-        if (currentSpeed == Speeds.SLOW) {
-            power = 0.5f;
-        }
-
+        //Set output values according to what was pressed
         if (gamepad.dpad_right) {
-            leftFrontDrive.setPower(power);
-            rightBackDrive.setPower(power);
-            leftBackDrive.setPower(power * -1);
-            rightFrontDrive.setPower(power * -1);
+            horizontal = 1;
         } else if (gamepad.dpad_left) {
-            leftFrontDrive.setPower(power * -1);
-            rightBackDrive.setPower(power * -1);
-            leftBackDrive.setPower(power);
-            rightFrontDrive.setPower(power);
+            horizontal = -1;
         } else if (gamepad.dpad_down) {
-            leftFrontDrive.setPower(power);
-            rightBackDrive.setPower(power);
-            leftBackDrive.setPower(power);
-            rightFrontDrive.setPower(power);
+            vertical = -1;
         } else if (gamepad.dpad_up) {
-            leftFrontDrive.setPower(-power);
-            rightBackDrive.setPower(-power);
-            leftBackDrive.setPower(-power);
-            rightFrontDrive.setPower(-power);
+            vertical = 1;
         }
+
+        leftFrontPower = vertical + horizontal - turn;
+        rightFrontPower = vertical - horizontal + turn;
+        leftBackPower = vertical - horizontal - turn;
+        rightBackPower = vertical + horizontal + turn;
+
+        leftFrontDrive.setPower(leftFrontPower);
+        rightBackDrive.setPower(rightBackPower);
+        leftBackDrive.setPower(leftBackPower);
+        rightFrontDrive.setPower(rightFrontPower);
     }
 
-    // Changes the drive speed mode to slow
-    public void setSlowMode() {
-        currentSpeed = Speeds.SLOW;
-    }
+    //Toggles speed
+    public void toggleSlowMode(Speeds targetSpeed) {
 
-    // Change the drive speed mode to normal
-    public void setNormalMode() {
-        currentSpeed = Speeds.NORMAL;
+        // Set the speedMultiplier in case of SLOW mode
+        if (currentSpeed == Speeds.SLOW) {
+            currentSpeed = Speeds.NORMAL;
+            speedMultiplier = 1;
+        } else {
+            currentSpeed = Speeds.SLOW;
+            speedMultiplier = 0.5;
+        }
     }
 }
 
