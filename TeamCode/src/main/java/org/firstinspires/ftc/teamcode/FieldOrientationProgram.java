@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
 import org.firstinspires.ftc.teamcode.yise.RobotNavigation;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 
-@TeleOp(name="Center Stage", group="Linear Opmode")
-public class MainDriveProgram extends LinearOpMode {
+@TeleOp(name="Center Stage Field Orient", group="Linear Opmode")
+public class FieldOrientationProgram extends LinearOpMode {
 
 
     // Declare OpMode members for each of the 4 motors.
@@ -18,7 +18,6 @@ public class MainDriveProgram extends LinearOpMode {
 
     boolean canToggleSlowMode = true;
     boolean canToggleHandPosition = true;
-    boolean fieldOrientation = false;
 
     @Override
     public void runOpMode() {
@@ -66,18 +65,11 @@ public class MainDriveProgram extends LinearOpMode {
             /**
              * Driving
              */
-            //Enable field orientation through button
-            if (gamepad1.back) {
-                fieldOrientation = true;
-            }
-
             // If we have any Dpad input, update the motor power based on dpad
             if (gamepad1.dpad_right || gamepad1.dpad_left || gamepad1.dpad_up || gamepad1.dpad_down) {
                 drive.updateMotorsFromDpad(gamepad1);
-            } else if (fieldOrientation) {
+            }else {
                 drive.updateMotorsFieldOrientation(gamepad1);
-            } else {
-                drive.updateMotorsFromStick(gamepad1);
             }
 
 

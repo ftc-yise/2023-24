@@ -34,11 +34,6 @@ public class centerStageDrivFieldOrientationClass {
 
     private IMU imu;
 
-    RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
-    RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
-
-    RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-
 
     // Used to track slow-mode versus normal mode
     public Speeds currentSpeed;
