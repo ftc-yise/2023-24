@@ -161,9 +161,9 @@ public class RobotNavigation {
 
         //Set output values according to what was pressed
         if (gamepad.dpad_right) {
-            horizontal = 1;
-        } else if (gamepad.dpad_left) {
             horizontal = -1;
+        } else if (gamepad.dpad_left) {
+            horizontal = 1;
         } else if (gamepad.dpad_down) {
             vertical = -1;
         } else if (gamepad.dpad_up) {
