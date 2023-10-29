@@ -51,7 +51,7 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @TeleOp(name = "Tensorflow Vision", group = "Concept")
-@Disabled
+//@Disabled
 public class TensorflowVision extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -139,6 +139,7 @@ public class TensorflowVision extends LinearOpMode {
 
     }   // end method initTfod()
 
+
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
@@ -148,11 +149,28 @@ public class TensorflowVision extends LinearOpMode {
 
 
         // Step through the list of recognitions and display info for each one.
-        /*for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-        }*/
+        double imageXOneThird = 0;
+        double y = 0;
+        double imageYOneThird = 0;
+        double imageYTwoThirds = 0;
+        double imageXTwoThirds = 0;
+        double x = 0;
+        for (Recognition recognition : currentRecognitions) {
+            x = recognition.getLeft();
+            y = recognition.getTop();
+            imageXOneThird = recognition.getImageHeight() / 3;
+            imageYOneThird = recognition.getImageWidth() / 3;
+            imageYTwoThirds = recognition.getImageHeight() / 3 * 2;
+            imageXTwoThirds = recognition.getImageWidth() / 3 * 2;
+        }
 
+        telemetry.addData("x of object", x);
+        telemetry.addData("y of object", y);
+        telemetry.addData("x of image 2/3", imageXTwoThirds);
+        telemetry.addData("x of image 1/3", imageXOneThird);
+        telemetry.addData("y of image 2/3", imageYTwoThirds);
+        telemetry.addData("y of image 1/3", imageYOneThird);
+        telemetry.update();
 
         return currentRecognitions;
     }
