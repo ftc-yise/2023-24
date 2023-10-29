@@ -14,8 +14,7 @@ import org.opencv.core.Mat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class tensorFlowClass {
-    public double x,y,imageXOneThird,imageYOneThird,imageYTwoThirds,imageXTwoThirds;
+public class TensorflowVision {
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
     private static final String[] LABELS = {
@@ -34,7 +33,7 @@ public class tensorFlowClass {
 
     // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
     // first.
-    public tensorFlowClass(HardwareMap hw, Telemetry telemetry) {
+    public TensorflowVision(HardwareMap hw) {
         // Create the TensorFlow processor by using a builder.
         tfod = new TfodProcessor.Builder()
 
@@ -87,21 +86,27 @@ public class tensorFlowClass {
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);
 
-    }   // end method initTfod()
+    }
 
-    public List<Recognition> getTfodDetections() {
+    public int getPropPosition() {
+
         List<Recognition> currentRecognitions = tfod.getRecognitions();
 
-        // Step through the list of recognitions and display info for each one.
-        for (Recognition recognition : currentRecognitions) {
-            x = recognition.getLeft();
-            y = recognition.getTop();
-            imageXOneThird = recognition.getImageHeight() / 3.0;
-            imageYOneThird = recognition.getImageWidth() / 3.0;
-            imageYTwoThirds = recognition.getImageHeight() / 3.0 * 2.0;
-            imageXTwoThirds = recognition.getImageWidth() / 3.0 * 2.0;
+        //If no recognitions, it is far right pos
+        if (currentRecognitions.isEmpty()) {
+            return 2;
         }
 
-        return currentRecognitions;
+        // Step through the list of recognitions and display info for each one.
+        double x = 0;
+        for (Recognition recognition : currentRecognitions) {
+            x = (recognition.getLeft() + recognition.getRight())/2;
+        }
+
+        if (x < 250) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }
