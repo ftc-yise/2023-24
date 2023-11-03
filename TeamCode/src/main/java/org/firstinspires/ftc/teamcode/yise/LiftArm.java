@@ -81,12 +81,24 @@ public class LiftArm {
         }
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (leftSlide.isBusy() && rightSlide.isBusy()) {
-            leftSlide.setPower(0.5);
-            rightSlide.setPower(0.5);
+        leftSlide.setPower(1);
+        rightSlide.setPower(1);
+    }
+
+    public boolean slideStatusBusy() {
+        boolean busy = false;
+        if (rightSlide.isBusy() || leftSlide.isBusy()) {
+            busy = true;
         }
-        leftSlide.setPower(0);
-        rightSlide.setPower(0);
+        return busy;
+    }
+
+    public boolean handStatusBusy() {
+        boolean busyHand = false;
+        if (hand.isBusy()) {
+            busyHand = true;
+        }
+        return busyHand;
     }
 
     public void setHandPosition(HandPosition targetHandPosition) {
@@ -96,7 +108,7 @@ public class LiftArm {
                 hand.setTargetPosition(-5);
                 break;
             case OUT:
-                hand.setTargetPosition(-105);
+                hand.setTargetPosition(-150);
                 break;
         }
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -106,13 +118,13 @@ public class LiftArm {
 
 
     public void closeTrapdoor() {
-        trapdoor.setPosition(0.3);
+        trapdoor.setPosition(1);
     }
     public void openTrapdoor() {
         trapdoor.setPosition(Servo.MIN_POSITION);
     }
 
-    /*public void holdPositionHandOUT() {
+    public void holdPositionHandOUT() {
         hand.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hand.setPower(0.05);
     }
@@ -120,7 +132,7 @@ public class LiftArm {
     public void holdPositionHandIN() {
         hand.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hand.setPower(-.25);
-    }*/
+    }
 
 
     public double getSlidePosition(Sides side) {
@@ -131,6 +143,13 @@ public class LiftArm {
         }
 
         return 0;
+    }
+
+    public void holdPosition() {
+        leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftSlide.setPower(0.05);
+        rightSlide.setPower(0.05);
     }
 
     public double getHandPosition() {
