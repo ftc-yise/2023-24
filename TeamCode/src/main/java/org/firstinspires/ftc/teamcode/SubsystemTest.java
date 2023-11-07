@@ -38,6 +38,7 @@ public class SubsystemTest extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
+        arm.openIntakeHolder();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -115,6 +116,10 @@ public class SubsystemTest extends LinearOpMode {
             } else if (gamepad1.right_bumper) {
                 arm.openTrapdoor();
                 telemetry.addData("Bumber", gamepad1.right_bumper);
+            }
+
+            if (gamepad2.a){
+                arm.openIntakeHolder();
             }
 
 
