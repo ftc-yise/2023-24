@@ -54,7 +54,7 @@ public class LiftArm {
 
         intakeHolder.setDirection(Servo.Direction.REVERSE);
 
-        trapdoor.setPosition(Servo.MIN_POSITION);
+        trapdoor.setPosition(.1);
 
         setIntakeHolder(holderPositions.CLOSE);
 
@@ -130,11 +130,11 @@ public class LiftArm {
 
 
 
-    public void closeTrapdoor() {
-        trapdoor.setPosition(1);
-    }
     public void openTrapdoor() {
-        trapdoor.setPosition(Servo.MIN_POSITION);
+        trapdoor.setPosition(.8);
+    }
+    public void closeTrapdoor() {
+        trapdoor.setPosition(.1);
     }
 
     public void closeIntakeHolder() {
