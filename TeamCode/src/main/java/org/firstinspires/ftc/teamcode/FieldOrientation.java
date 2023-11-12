@@ -111,8 +111,6 @@ public class FieldOrientation extends LinearOpMode {
 
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            //double vertical   = -gamepad1.right_stick_x;  // Note: pushing stick forward gives negative value
-
             double horizontal =  gamepad1.left_stick_x * -1;
             double vertical     =  gamepad1.left_stick_y * -1;
             double turnR = 0;
@@ -138,20 +136,6 @@ public class FieldOrientation extends LinearOpMode {
                 turnR = 0;
                 turnL = gamepad1.right_stick_x;
             }
-
-
-
-            //this is nates idea to have preset directions
-           /* if (gamepad1.dpad_right && theta / (Math.PI) > 0.01) {
-                turn = (theta % (Math.PI));
-            }else if (gamepad1.dpad_down && theta % (Math.PI * 1.5) > 0.01) {
-                turn = (theta % (Math.PI * 1.5)) * 2;
-            }else if (gamepad1.dpad_left && theta % (Math.PI*2) > 0.01) {
-                turn = (theta % (Math.PI * 2)) * 2;
-            } else if (!gamepad1.dpad_down && !gamepad1.dpad_up && !gamepad1.dpad_right && !gamepad1.dpad_left) {
-                turn = gamepad1.right_stick_x;
-            }*/
-
 
             if (gamepad1.a) {
                 telemetry.addData("Yaw", "Resetting\n");

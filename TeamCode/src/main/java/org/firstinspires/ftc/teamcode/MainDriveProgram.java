@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
 import org.firstinspires.ftc.teamcode.yise.RobotNavigation;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
+import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
 
 @TeleOp(name="Center Stage", group="Linear Opmode")
 public class MainDriveProgram extends LinearOpMode {
@@ -29,6 +30,8 @@ public class MainDriveProgram extends LinearOpMode {
         LiftArm arm = new LiftArm(hardwareMap);
         // create instance of intake system class
         IntakeSystem intakeSystem = new IntakeSystem(hardwareMap);
+        // create instance of tensorflow vision class
+        TensorflowVision tfodVision = new TensorflowVision(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -151,6 +154,10 @@ public class MainDriveProgram extends LinearOpMode {
             telemetry.addData("Horizontal input", gamepad1.left_stick_x);
             telemetry.addData("Vertical input: ", gamepad1.left_stick_y);
             telemetry.addData("Turn input: ", gamepad1.right_stick_x);
+
+            telemetry.addLine();
+
+            telemetry.addData("Prop position: ", tfodVision.getPropPosition());
             telemetry.update();
         }
     }
