@@ -54,7 +54,7 @@ public class LiftArm {
 
         intakeHolder.setDirection(Servo.Direction.REVERSE);
 
-        trapdoor.setPosition(.1);
+        trapdoor.setPosition(.2);
 
         setIntakeHolder(holderPositions.CLOSE);
 
@@ -77,10 +77,10 @@ public class LiftArm {
                 slide.setTargetPosition(0);
                 break;
             case HALF:
-                slide.setTargetPosition(1100);
+                slide.setTargetPosition(1200);
                 break;
             case FULL:
-                slide.setTargetPosition(1950);
+                slide.setTargetPosition(2400);
                 break;
         }
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -118,10 +118,10 @@ public class LiftArm {
         handPosition = targetHandPosition;
         switch (targetHandPosition) {
             case IN:
-                hand.setTargetPosition(-5);
+                hand.setTargetPosition(0);
                 break;
             case OUT:
-                hand.setTargetPosition(-150);
+                hand.setTargetPosition(-120);
                 break;
         }
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -131,10 +131,10 @@ public class LiftArm {
 
 
     public void openTrapdoor() {
-        trapdoor.setPosition(.8);
+        trapdoor.setPosition(0.6);
     }
     public void closeTrapdoor() {
-        trapdoor.setPosition(.1);
+        trapdoor.setPosition(0.2);
     }
 
     public void closeIntakeHolder() {

@@ -1,14 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.RobotNavigation;
 
-@TeleOp(name="Subsystem Test", group="Linear Opmode")
+@TeleOp(name="1 Controller Drive", group="Linear Opmode")
 public class SubsystemTest extends LinearOpMode {
 
 
@@ -26,11 +29,14 @@ public class SubsystemTest extends LinearOpMode {
     public void runOpMode() {
 
         // create instance of drive class
-        RobotNavigation drive = new RobotNavigation(hardwareMap);
+        //RobotNavigation drive = new RobotNavigation(hardwareMap);
         // create instance of lift arm class
         LiftArm arm = new LiftArm(hardwareMap);
         // create instance of intake system class
         IntakeSystem intakeSystem = new IntakeSystem(hardwareMap);
+
+        SampleMecanumDrive rrDrive = new SampleMecanumDrive(hardwareMap);
+        rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -76,13 +82,13 @@ public class SubsystemTest extends LinearOpMode {
             }
 
             // If we have any Dpad input, update the motor power based on dpad
-            if (fieldOrientation) {
+            /*if (fieldOrientation) {
                 drive.updateMotorsFieldOrientation(gamepad1);
             } else {
                 drive.updateMotorsFromStick(gamepad1);
-            }
+            }*/
 
-
+            rrDrive.setWeightedDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
 
             /**
              * Intake
@@ -101,8 +107,10 @@ public class SubsystemTest extends LinearOpMode {
              * Arm slides
              */
             if (gamepad1.dpad_up){
+                arm.setArmDistance(LiftArm.Distance.FULL);
+            } else if (gamepad1.dpad_right){
                 arm.setArmDistance(LiftArm.Distance.HALF);
-            } else if (gamepad1.dpad_down){
+            } else if (gamepad1.dpad_down) {
                 arm.setArmDistance(LiftArm.Distance.DEFAULT);
             }
 
@@ -115,7 +123,6 @@ public class SubsystemTest extends LinearOpMode {
                 arm.closeTrapdoor();
             } else if (gamepad1.right_bumper) {
                 arm.openTrapdoor();
-                telemetry.addData("Bumber", gamepad1.right_bumper);
             }
 
             if (gamepad2.a){
@@ -130,7 +137,7 @@ public class SubsystemTest extends LinearOpMode {
                 canToggleSlowMode = true;
             }
 
-            if (gamepad1.y && canToggleSlowMode) {
+            /*if (gamepad1.y && canToggleSlowMode) {
                 canToggleSlowMode = false;
 
                 //Toggle between slow and normal speeds
@@ -142,7 +149,7 @@ public class SubsystemTest extends LinearOpMode {
                         drive.toggleSlowMode(RobotNavigation.Speeds.SLOW);
                         break;
                 }
-            }
+            }*/
 
             if (!arm.slideStatusBusy()) {
                 arm.holdPosition();
