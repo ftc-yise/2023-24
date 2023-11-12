@@ -111,7 +111,9 @@ public class FieldOrientation extends LinearOpMode {
 
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double horizontal =  gamepad1.left_stick_x * -1;
+            //double vertical   = -gamepad1.right_stick_x;  // Note: pushing stick forward gives negative value
+
+            double horizontal =  gamepad1.left_stick_x;
             double vertical     =  gamepad1.left_stick_y * -1;
             double turnR = 0;
             double turnL = 0;

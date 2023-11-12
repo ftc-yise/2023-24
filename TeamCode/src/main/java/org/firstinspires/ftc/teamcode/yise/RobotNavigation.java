@@ -77,10 +77,10 @@ public class RobotNavigation {
 
 
         // Calculate individual motor power base on the stick input values
-        leftFrontPower = vertical + horizontal - turn;
-        rightFrontPower = vertical - horizontal + turn;
-        leftBackPower = vertical - horizontal - turn;
-        rightBackPower = vertical + horizontal + turn;
+        leftFrontPower = vertical - horizontal - turn;
+        rightFrontPower = vertical + horizontal + turn;
+        leftBackPower = vertical + horizontal - turn;
+        rightBackPower = vertical - horizontal + turn;
 
 
         // Normalize the power values so no wheel power exceeds 100%
@@ -124,18 +124,11 @@ public class RobotNavigation {
         horizontalOut = (horizontal * Math.cos(theta)) - (vertical * Math.sin(theta));
         verticalOut = -(vertical * Math.cos(theta)) + (horizontal * Math.sin(theta));
 
-        leftFrontPower  = (verticalOut - horizontalOut - turn);
-        rightFrontPower = (verticalOut + horizontalOut + turn);
-        leftBackPower   = (verticalOut + horizontalOut - turn);
-        rightBackPower  = (verticalOut - horizontalOut + turn);
+        leftFrontPower  = (verticalOut + horizontalOut - turn);
+        rightFrontPower = (verticalOut - horizontalOut + turn);
+        leftBackPower   = (verticalOut - horizontalOut - turn);
+        rightBackPower  = (verticalOut + horizontalOut + turn);
 
-        //Implementation of having power to the motors to brake when not moving
-        if (vertical == 0 && horizontal == 0 && turn == 0){
-            leftFrontPower  = 0.01;
-            rightFrontPower = 0.01;
-            leftBackPower   = 0.01;
-            rightBackPower  = 0.01;
-        }
 
         // Normalize the power values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.

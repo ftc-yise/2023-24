@@ -7,8 +7,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class LiftArm {
-    public DcMotor leftSlide, rightSlide, hand;
+    public DcMotor slide, hand;
     public Servo trapdoor;
+    public Servo intakeHolder;
 
     public HandPosition handPosition;
     public double intakePower = 0;
@@ -31,6 +32,11 @@ public class LiftArm {
         CLOSE
     }
 
+    public enum holderPositions{
+        OPEN,
+        CLOSE
+    }
+
     // Used to identify left and right slide motors
     public enum Sides {
         RIGHT,
@@ -42,22 +48,23 @@ public class LiftArm {
     public LiftArm(HardwareMap hardwareMap) {
         //Initialize motors and servos
         hand = hardwareMap.get(DcMotor.class, "hand");
-        leftSlide = hardwareMap.get(DcMotor.class, "left_slide");
-        rightSlide = hardwareMap.get(DcMotor.class, "right_slide");
+        slide = hardwareMap.get(DcMotor.class, "slide");
         trapdoor = hardwareMap.get(Servo.class, "trapdoor");
+        intakeHolder = hardwareMap.get(Servo.class, "intakeHolder");
 
+        intakeHolder.setDirection(Servo.Direction.REVERSE);
 
-        trapdoor.setPosition(Servo.MIN_POSITION);
+        trapdoor.setPosition(.1);
+
+        setIntakeHolder(holderPositions.CLOSE);
 
         //Set motor directions
         hand.setDirection(DcMotor.Direction.FORWARD);
-        leftSlide.setDirection(DcMotor.Direction.REVERSE);
-        rightSlide.setDirection(DcMotor.Direction.FORWARD);
+        slide.setDirection(DcMotor.Direction.REVERSE);
 
         //Reset encoders
         hand.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         setHandPosition(HandPosition.IN);
     }
@@ -67,26 +74,44 @@ public class LiftArm {
     public void setArmDistance(Distance targetDistance) {
         switch (targetDistance) {
             case DEFAULT:
-                leftSlide.setTargetPosition(0);
-                rightSlide.setTargetPosition(0);
+                slide.setTargetPosition(0);
                 break;
             case HALF:
-                leftSlide.setTargetPosition(1100);
-                rightSlide.setTargetPosition(1100);
+                slide.setTargetPosition(1100);
                 break;
             case FULL:
-                leftSlide.setTargetPosition(1950);
-                rightSlide.setTargetPosition(1950);
+                slide.setTargetPosition(1950);
                 break;
         }
-        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (leftSlide.isBusy() && rightSlide.isBusy()) {
-            leftSlide.setPower(0.5);
-            rightSlide.setPower(0.5);
+        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slide.setPower(1);
+    }
+
+    public boolean slideStatusBusy() {
+        boolean busy = false;
+        if (slide.isBusy()) {
+            busy = true;
         }
-        leftSlide.setPower(0);
-        rightSlide.setPower(0);
+        return busy;
+    }
+
+    public boolean handStatusBusy() {
+        boolean busyHand = false;
+        if (hand.isBusy()) {
+            busyHand = true;
+        }
+        return busyHand;
+    }
+
+    public void setIntakeHolder(holderPositions targetState) {
+        switch (targetState) {
+            case OPEN:
+                intakeHolder.setPosition(Servo.MAX_POSITION);
+                break;
+            case CLOSE:
+                intakeHolder.setPosition(Servo.MIN_POSITION);
+                break;
+        }
     }
 
     public void setHandPosition(HandPosition targetHandPosition) {
@@ -96,7 +121,7 @@ public class LiftArm {
                 hand.setTargetPosition(-5);
                 break;
             case OUT:
-                hand.setTargetPosition(-105);
+                hand.setTargetPosition(-150);
                 break;
         }
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -105,14 +130,21 @@ public class LiftArm {
 
 
 
-    public void closeTrapdoor() {
-        trapdoor.setPosition(0.3);
-    }
     public void openTrapdoor() {
-        trapdoor.setPosition(Servo.MIN_POSITION);
+        trapdoor.setPosition(.8);
+    }
+    public void closeTrapdoor() {
+        trapdoor.setPosition(.1);
     }
 
-    /*public void holdPositionHandOUT() {
+    public void closeIntakeHolder() {
+        setIntakeHolder(holderPositions.CLOSE);
+    }
+    public void openIntakeHolder() {
+        setIntakeHolder(holderPositions.OPEN);
+    }
+
+    public void holdPositionHandOUT() {
         hand.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hand.setPower(0.05);
     }
@@ -120,17 +152,16 @@ public class LiftArm {
     public void holdPositionHandIN() {
         hand.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         hand.setPower(-.25);
-    }*/
+    }
 
 
     public double getSlidePosition(Sides side) {
-        if (side == Sides.LEFT) {
-            return leftSlide.getCurrentPosition();
-        } else if (side == Sides.RIGHT) {
-            return rightSlide.getCurrentPosition();
-        }
+        return slide.getCurrentPosition();
+    }
 
-        return 0;
+    public void holdPosition() {
+        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slide.setPower(0.05);
     }
 
     public double getHandPosition() {
