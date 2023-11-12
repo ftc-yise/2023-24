@@ -139,20 +139,6 @@ public class FieldOrientation extends LinearOpMode {
                 turnL = gamepad1.right_stick_x;
             }
 
-
-
-            //this is nates idea to have preset directions
-           /* if (gamepad1.dpad_right && theta / (Math.PI) > 0.01) {
-                turn = (theta % (Math.PI));
-            }else if (gamepad1.dpad_down && theta % (Math.PI * 1.5) > 0.01) {
-                turn = (theta % (Math.PI * 1.5)) * 2;
-            }else if (gamepad1.dpad_left && theta % (Math.PI*2) > 0.01) {
-                turn = (theta % (Math.PI * 2)) * 2;
-            } else if (!gamepad1.dpad_down && !gamepad1.dpad_up && !gamepad1.dpad_right && !gamepad1.dpad_left) {
-                turn = gamepad1.right_stick_x;
-            }*/
-
-
             if (gamepad1.a) {
                 telemetry.addData("Yaw", "Resetting\n");
                 imu.resetYaw();
