@@ -44,7 +44,7 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
 
 
         //Bot starting position
-        Pose2d startPose = new Pose2d(12, -61, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(12, -61, Math.toRadians(-90));
         drive.setPoseEstimate(startPose);
 
         //Trajectory sequences contain driving instructions
@@ -131,7 +131,7 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
 
         //Follow trajectories in order
         //switch between parking
-        if(vision.getPropPosition() == 1) {
+        if(vision.getPropPosition() == 0) {
             drive.followTrajectory(traj1_1);
             sleep(1000);
             drive.followTrajectory(traj2_1);
@@ -139,7 +139,7 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
             drive.followTrajectory(traj3_1);
             sleep(1000);
             drive.followTrajectory(traj4_1);
-        } else if (vision.getPropPosition() == 2) {
+        } else if (vision.getPropPosition() == 1) {
             drive.followTrajectory(traj1_2);
             sleep(2000);
             drive.followTrajectory(traj2_2);
@@ -147,7 +147,7 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
             drive.followTrajectory(traj3_2);
             sleep(2000);
             drive.followTrajectory(traj4_2);
-        } else if (vision.getPropPosition() == 3) {
+        } else if (vision.getPropPosition() == 2) {
             drive.followTrajectory(traj1_3);
             sleep(3000);
             drive.followTrajectory(traj2_3);
