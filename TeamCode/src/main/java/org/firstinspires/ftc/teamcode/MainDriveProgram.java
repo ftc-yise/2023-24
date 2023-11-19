@@ -147,7 +147,7 @@ public class MainDriveProgram extends LinearOpMode {
             telemetry.addData("Trapdoor: ", arm.trapdoor.getPosition());
             telemetry.addData("Hand: ", arm.getHandPosition());
             telemetry.addData("Intake: ", arm.intakePower);
-            telemetry.addData("Slides (R, L): ", arm.getSlidePosition(LiftArm.Sides.RIGHT) + ", " + arm.getSlidePosition(LiftArm.Sides.LEFT));
+            telemetry.addData("Slides (R, L): ", arm.getSlidePosition() + ", " + arm.getSlidePosition());
 
             telemetry.addLine();
 

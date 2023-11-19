@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.opencv.core.Mat;
+
 public class LiftArm {
     public DcMotor slide, hand;
     public Servo trapdoor;
@@ -54,9 +56,7 @@ public class LiftArm {
 
         intakeHolder.setDirection(Servo.Direction.REVERSE);
 
-        trapdoor.setPosition(.1);
-
-        setIntakeHolder(holderPositions.CLOSE);
+        trapdoor.setPosition(.2);
 
         //Set motor directions
         hand.setDirection(DcMotor.Direction.FORWARD);
@@ -77,91 +77,53 @@ public class LiftArm {
                 slide.setTargetPosition(0);
                 break;
             case HALF:
-                slide.setTargetPosition(1100);
+                slide.setTargetPosition(1200);
                 break;
             case FULL:
-                slide.setTargetPosition(1950);
+                slide.setTargetPosition(2400);
                 break;
         }
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slide.setPower(1);
-    }
 
-    public boolean slideStatusBusy() {
-        boolean busy = false;
-        if (slide.isBusy()) {
-            busy = true;
-        }
-        return busy;
-    }
-
-    public boolean handStatusBusy() {
-        boolean busyHand = false;
-        if (hand.isBusy()) {
-            busyHand = true;
-        }
-        return busyHand;
-    }
-
-    public void setIntakeHolder(holderPositions targetState) {
-        switch (targetState) {
-            case OPEN:
-                intakeHolder.setPosition(Servo.MAX_POSITION);
-                break;
-            case CLOSE:
-                intakeHolder.setPosition(Servo.MIN_POSITION);
-                break;
+        if (!slide.isBusy()) {
+            slide.setPower(0.05);
         }
     }
+
+
 
     public void setHandPosition(HandPosition targetHandPosition) {
         handPosition = targetHandPosition;
         switch (targetHandPosition) {
             case IN:
-                hand.setTargetPosition(-5);
+                hand.setTargetPosition(0);
                 break;
             case OUT:
-                hand.setTargetPosition(-150);
+                hand.setTargetPosition(-120);
                 break;
         }
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hand.setPower(0.5);
+
+        //120-0
+        hand.setPower(Math.abs((hand.getTargetPosition() - hand.getCurrentPosition())/120));
+        if (!hand.isBusy()) {
+            hand.setPower(0.05);
+        }
     }
 
 
 
     public void openTrapdoor() {
-        trapdoor.setPosition(.8);
+        trapdoor.setPosition(0.6);
     }
     public void closeTrapdoor() {
-        trapdoor.setPosition(.1);
-    }
-
-    public void closeIntakeHolder() {
-        setIntakeHolder(holderPositions.CLOSE);
-    }
-    public void openIntakeHolder() {
-        setIntakeHolder(holderPositions.OPEN);
-    }
-
-    public void holdPositionHandOUT() {
-        hand.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        hand.setPower(0.05);
-    }
-
-    public void holdPositionHandIN() {
-        hand.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        hand.setPower(-.25);
+        trapdoor.setPosition(0.2);
     }
 
 
-    public double getSlidePosition(Sides side) {
+    public double getSlidePosition() {
         return slide.getCurrentPosition();
-    }
-
-    public void holdPosition() {
-        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        slide.setPower(0.05);
     }
 
     public double getHandPosition() {

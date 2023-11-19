@@ -1,14 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
+import org.firstinspires.ftc.teamcode.yise.RoadRunnerDriving;
 import org.firstinspires.ftc.teamcode.yise.RobotNavigation;
 
-@TeleOp(name="Subsystem Test", group="Linear Opmode")
+@TeleOp(name="1 Controller Drive", group="Linear Opmode")
 public class SubsystemTest extends LinearOpMode {
 
 
@@ -20,17 +28,25 @@ public class SubsystemTest extends LinearOpMode {
     boolean canToggleHandPosition = true;
     boolean handPositionIn = true;
 
-    boolean fieldOrientation = false;
-
     @Override
     public void runOpMode() {
-
-        // create instance of drive class
-        RobotNavigation drive = new RobotNavigation(hardwareMap);
         // create instance of lift arm class
         LiftArm arm = new LiftArm(hardwareMap);
         // create instance of intake system class
         IntakeSystem intakeSystem = new IntakeSystem(hardwareMap);
+        //Instance of drive class
+        RoadRunnerDriving rrDrive = new RoadRunnerDriving(hardwareMap);
+
+        IMU imu = hardwareMap.get(IMU.class, "imu");
+
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
+
+        imu.resetYaw();
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -38,7 +54,6 @@ public class SubsystemTest extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
-        arm.openIntakeHolder();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -61,27 +76,24 @@ public class SubsystemTest extends LinearOpMode {
                 }
             }
 
-            /*if (!arm.handStatusBusy() && handPositionIn) {
-                arm.holdPositionHandIN();
-            } else if (!arm.handStatusBusy() && !handPositionIn){
-                arm.holdPositionHandOUT();
-            }*/
+
 
             /**
              * Driving
              */
-            //Enable field orientation through button
-            if (gamepad1.back) {
-                fieldOrientation = true;
-            }
-
             // If we have any Dpad input, update the motor power based on dpad
-            if (fieldOrientation) {
-                drive.updateMotorsFieldOrientation(gamepad1);
-            } else {
-                drive.updateMotorsFromStick(gamepad1);
-            }
 
+            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+            double theta = orientation.getYaw(AngleUnit.RADIANS) + Math.PI;
+
+            rrDrive.updateMotorsFromStick(gamepad1);
+            rrDrive.update();
+
+
+            //For testing
+            if (gamepad1.dpad_left) {
+                rrDrive.drive10in();
+            }
 
 
             /**
@@ -101,8 +113,10 @@ public class SubsystemTest extends LinearOpMode {
              * Arm slides
              */
             if (gamepad1.dpad_up){
+                arm.setArmDistance(LiftArm.Distance.FULL);
+            } else if (gamepad1.dpad_right){
                 arm.setArmDistance(LiftArm.Distance.HALF);
-            } else if (gamepad1.dpad_down){
+            } else if (gamepad1.dpad_down) {
                 arm.setArmDistance(LiftArm.Distance.DEFAULT);
             }
 
@@ -115,11 +129,6 @@ public class SubsystemTest extends LinearOpMode {
                 arm.closeTrapdoor();
             } else if (gamepad1.right_bumper) {
                 arm.openTrapdoor();
-                telemetry.addData("Bumber", gamepad1.right_bumper);
-            }
-
-            if (gamepad2.a){
-                arm.openIntakeHolder();
             }
 
 
@@ -134,20 +143,15 @@ public class SubsystemTest extends LinearOpMode {
                 canToggleSlowMode = false;
 
                 //Toggle between slow and normal speeds
-                switch (drive.currentSpeed) {
+                switch (rrDrive.currentSpeed) {
                     case SLOW:
-                        drive.toggleSlowMode(RobotNavigation.Speeds.NORMAL);
+                        rrDrive.toggleSlowMode(RoadRunnerDriving.Speeds.NORMAL);
                         break;
                     case NORMAL:
-                        drive.toggleSlowMode(RobotNavigation.Speeds.SLOW);
+                        rrDrive.toggleSlowMode(RoadRunnerDriving.Speeds.SLOW);
                         break;
                 }
             }
-
-            if (!arm.slideStatusBusy()) {
-                arm.holdPosition();
-            }
-
 
             /**
              * Telemetry data
@@ -155,7 +159,7 @@ public class SubsystemTest extends LinearOpMode {
             telemetry.addData("Trapdoor: ", arm.trapdoor.getPosition());
             telemetry.addData("Hand: ", arm.getHandPosition());
             telemetry.addData("Intake: ", arm.intakePower);
-            telemetry.addData("Slides (R, L): ", arm.getSlidePosition(LiftArm.Sides.RIGHT) + ", " + arm.getSlidePosition(LiftArm.Sides.LEFT));
+            telemetry.addData("Slides (R, L): ", arm.getSlidePosition() + ", " + arm.getSlidePosition());
 
             telemetry.addLine();
 

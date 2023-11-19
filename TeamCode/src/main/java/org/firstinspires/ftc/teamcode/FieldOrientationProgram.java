@@ -136,7 +136,7 @@ public class FieldOrientationProgram extends LinearOpMode {
             telemetry.addData("Trapdoor: ", arm.trapdoor.getPosition());
             telemetry.addData("Hand: ", arm.getHandPosition());
             telemetry.addData("Intake: ", arm.intakePower);
-            telemetry.addData("Slides (R, L): ", arm.getSlidePosition(LiftArm.Sides.RIGHT) + ", " + arm.getSlidePosition(LiftArm.Sides.LEFT));
+            telemetry.addData("Slide: ", arm.getSlidePosition());
 
             telemetry.addLine();
 

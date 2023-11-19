@@ -1,0 +1,105 @@
+package org.firstinspires.ftc.teamcode.yise;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.opencv.core.Mat;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class RoadRunnerDriving {
+
+    SampleMecanumDrive drive;
+    // Note: we make these public so the calling code can access and use these variables
+    public IMU imu;
+
+    // Used to track slow-mode versus normal mode
+    public Speeds currentSpeed;
+    double speedMultiplier;
+
+    Pose2d currentPose = new Pose2d(0, 0, Math.toRadians(0));
+
+    public enum Speeds {
+        SLOW,
+        NORMAL
+    }
+
+    //Declare the constructor for the class
+    public RoadRunnerDriving(HardwareMap hardwareMap) {
+        drive = new SampleMecanumDrive(hardwareMap);
+        drive.setPoseEstimate(currentPose);
+
+        // set default value for speed
+        currentSpeed = Speeds.NORMAL;
+        speedMultiplier = 1;
+
+        imu = hardwareMap.get(IMU.class, "imu");
+
+
+        //Field orientation stuff
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+        // Now initialize the IMU with this mounting orientation
+        // Note: if you choose two conflicting directions, this initialization will cause a code exception.
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
+
+        imu.resetYaw();
+    }
+
+
+    public void updateMotorsFromStick(Gamepad gamepad) {
+        drive.setWeightedDrivePower(new Pose2d(
+                -gamepad.left_stick_y * speedMultiplier,
+                -gamepad.left_stick_x * speedMultiplier,
+                -gamepad.right_stick_x * speedMultiplier
+        ));
+    }
+
+    //Toggles speed
+    public void toggleSlowMode(Speeds targetSpeed) {
+
+        // Set the speedMultiplier in case of SLOW mode
+        if (currentSpeed == Speeds.SLOW) {
+            currentSpeed = Speeds.NORMAL;
+            speedMultiplier = 1;
+        } else {
+            currentSpeed = Speeds.SLOW;
+            speedMultiplier = 0.5;
+        }
+    }
+
+    public void update() {
+        drive.update();
+    }
+
+    public void updatePoseEstimate(double rot) {
+        Pose2d poseEstimate = drive.getPoseEstimate();
+        drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), rot));
+        drive.update();
+    }
+
+    public void drive10in() {
+
+        if (!drive.isBusy()) {
+            Trajectory traj1 = drive.trajectoryBuilder(drive.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(0, 20, Math.toRadians(90)))
+                    .build();
+
+            drive.followTrajectory(traj1);
+        }
+    }
+}
+
