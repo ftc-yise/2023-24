@@ -113,11 +113,11 @@ public class SubsystemTest extends LinearOpMode {
              * Arm slides
              */
             if (gamepad1.dpad_up){
-                arm.setArmDistance(LiftArm.Distance.FULL);
+                arm.extendAndDrop(LiftArm.Distance.FULL);
             } else if (gamepad1.dpad_right){
-                arm.setArmDistance(LiftArm.Distance.HALF);
+                arm.extendAndDrop(LiftArm.Distance.HALF);
             } else if (gamepad1.dpad_down) {
-                arm.setArmDistance(LiftArm.Distance.DEFAULT);
+                arm.retract();
             }
 
 
@@ -166,6 +166,8 @@ public class SubsystemTest extends LinearOpMode {
             telemetry.addData("Horizontal input", gamepad1.left_stick_x);
             telemetry.addData("Vertical input: ", gamepad1.left_stick_y);
             telemetry.addData("Turn input: ", gamepad1.right_stick_x);
+
+            telemetry.addData("hand power: ", arm.hand.getPower());
             telemetry.update();
         }
     }
