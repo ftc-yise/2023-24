@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 //import team class
 import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
+import org.firstinspires.ftc.teamcode.yise.RoadRunnerDriving;
 import org.firstinspires.ftc.teamcode.yise.RobotNavigation;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
@@ -19,19 +20,18 @@ public class MainDriveProgram extends LinearOpMode {
 
     boolean canToggleSlowMode = true;
     boolean canToggleHandPosition = true;
-    boolean fieldOrientation = false;
+    boolean driverControl = true;
+    boolean canToggleDriverControl = true;
 
     @Override
     public void runOpMode() {
 
         // create instance of drive class
-        RobotNavigation drive = new RobotNavigation(hardwareMap);
+        RoadRunnerDriving rrDrive = new RoadRunnerDriving(hardwareMap);
         // create instance of lift arm class
         LiftArm arm = new LiftArm(hardwareMap);
         // create instance of intake system class
         IntakeSystem intakeSystem = new IntakeSystem(hardwareMap);
-        // create instance of tensorflow vision class
-        TensorflowVision tfodVision = new TensorflowVision(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -69,22 +69,24 @@ public class MainDriveProgram extends LinearOpMode {
             /**
              * Driving
              */
-            //Enable field orientation through button
-            if (gamepad1.back) {
-                fieldOrientation = true;
+
+            if (!gamepad1.dpad_left) {
+                canToggleDriverControl = true;
             }
 
-            // If we have any Dpad input, update the motor power based on dpad
-            if (gamepad1.dpad_right || gamepad1.dpad_left || gamepad1.dpad_up || gamepad1.dpad_down) {
-                drive.updateMotorsFromDpad(gamepad1);
-            } else if (fieldOrientation) {
-                drive.updateMotorsFieldOrientation(gamepad1);
-            } else {
-                drive.updateMotorsFromStick(gamepad1);
+            if (gamepad1.dpad_left && canToggleDriverControl) {
+                driverControl = !driverControl;
+
+                if (!driverControl) {
+                    rrDrive.pixelDropRed();
+                } else {
+                    rrDrive.updateMotorsFromStick(gamepad1);
+                    rrDrive.update();
+                }
             }
 
 
-
+            
             /**
              * Intake
              */
@@ -102,9 +104,11 @@ public class MainDriveProgram extends LinearOpMode {
              * Arm slides
              */
             if (gamepad2.dpad_up){
-                arm.setArmDistance(LiftArm.Distance.HALF);
-            } else if (gamepad2.dpad_down){
-                arm.setArmDistance(LiftArm.Distance.DEFAULT);
+                arm.extendAndDrop(LiftArm.Distance.FULL);
+            } else if (gamepad2.dpad_right){
+                arm.extendAndDrop(LiftArm.Distance.HALF);
+            } else if (gamepad2.dpad_down) {
+                arm.retract();
             }
 
 
@@ -130,12 +134,12 @@ public class MainDriveProgram extends LinearOpMode {
                 canToggleSlowMode = false;
 
                 //Toggle between slow and normal speeds
-                switch (drive.currentSpeed) {
+                switch (rrDrive.currentSpeed) {
                     case SLOW:
-                        drive.toggleSlowMode(RobotNavigation.Speeds.NORMAL);
+                        rrDrive.toggleSlowMode(RoadRunnerDriving.Speeds.NORMAL);
                         break;
                     case NORMAL:
-                        drive.toggleSlowMode(RobotNavigation.Speeds.SLOW);
+                        rrDrive.toggleSlowMode(RoadRunnerDriving.Speeds.SLOW);
                         break;
                 }
             }
@@ -154,10 +158,6 @@ public class MainDriveProgram extends LinearOpMode {
             telemetry.addData("Horizontal input", gamepad1.left_stick_x);
             telemetry.addData("Vertical input: ", gamepad1.left_stick_y);
             telemetry.addData("Turn input: ", gamepad1.right_stick_x);
-
-            telemetry.addLine();
-
-            telemetry.addData("Prop position: ", tfodVision.getPropPosition());
             telemetry.update();
         }
     }

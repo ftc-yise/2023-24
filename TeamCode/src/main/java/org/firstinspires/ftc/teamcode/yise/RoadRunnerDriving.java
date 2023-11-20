@@ -37,7 +37,7 @@ public class RoadRunnerDriving {
     //Declare the constructor for the class
     public RoadRunnerDriving(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(currentPose);
+        drive.setPoseEstimate(PoseStorage.currentPose);
 
         // set default value for speed
         currentSpeed = Speeds.NORMAL;
@@ -85,20 +85,13 @@ public class RoadRunnerDriving {
         drive.update();
     }
 
-    public void updatePoseEstimate(double rot) {
-        Pose2d poseEstimate = drive.getPoseEstimate();
-        drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), rot));
-        drive.update();
-    }
-
-    public void drive10in() {
+    public void pixelDropRed() {
 
         if (!drive.isBusy()) {
-            Trajectory traj1 = drive.trajectoryBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(0, 20, Math.toRadians(90)))
+            Trajectory pixelDropRed = drive.trajectoryBuilder(drive.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(12,-33.5, Math.toRadians(0)))
                     .build();
-
-            drive.followTrajectory(traj1);
+            drive.followTrajectory(pixelDropRed);
         }
     }
 }

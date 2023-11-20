@@ -27,6 +27,8 @@ public class SubsystemTest extends LinearOpMode {
 
     boolean canToggleHandPosition = true;
     boolean handPositionIn = true;
+    boolean driverControl = true;
+    boolean canToggleDriverControl = true;
 
     @Override
     public void runOpMode() {
@@ -86,14 +88,22 @@ public class SubsystemTest extends LinearOpMode {
             YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
             double theta = orientation.getYaw(AngleUnit.RADIANS) + Math.PI;
 
-            rrDrive.updateMotorsFromStick(gamepad1);
-            rrDrive.update();
 
-
-            //For testing
-            if (gamepad1.dpad_left) {
-                rrDrive.drive10in();
+            if (!gamepad1.dpad_left) {
+                canToggleDriverControl = true;
             }
+
+            if (gamepad1.dpad_left && canToggleDriverControl) {
+                driverControl = !driverControl;
+
+                if (!driverControl) {
+                    rrDrive.pixelDropRed();
+                } else {
+                    rrDrive.updateMotorsFromStick(gamepad1);
+                    rrDrive.update();
+                }
+            }
+
 
 
             /**
