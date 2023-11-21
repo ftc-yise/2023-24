@@ -89,19 +89,11 @@ public class SubsystemTest extends LinearOpMode {
             double theta = orientation.getYaw(AngleUnit.RADIANS) + Math.PI;
 
 
-            if (!gamepad1.dpad_left) {
-                canToggleDriverControl = true;
-            }
-
-            if (gamepad1.dpad_left && canToggleDriverControl) {
-                driverControl = !driverControl;
-
-                if (!driverControl) {
-                    rrDrive.pixelDropRed();
-                } else {
-                    rrDrive.updateMotorsFromStick(gamepad1);
-                    rrDrive.update();
-                }
+            if (gamepad1.dpad_left) {
+                rrDrive.pixelDropRed();
+            } else {
+                rrDrive.updateMotorsFromStick(gamepad1);
+                rrDrive.update();
             }
 
 

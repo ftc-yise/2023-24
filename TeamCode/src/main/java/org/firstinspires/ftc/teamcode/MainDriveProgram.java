@@ -21,7 +21,6 @@ public class MainDriveProgram extends LinearOpMode {
     boolean canToggleSlowMode = true;
     boolean canToggleHandPosition = true;
     boolean driverControl = true;
-    boolean canToggleDriverControl = true;
 
     @Override
     public void runOpMode() {
@@ -70,23 +69,15 @@ public class MainDriveProgram extends LinearOpMode {
              * Driving
              */
 
-            if (!gamepad1.dpad_left) {
-                canToggleDriverControl = true;
-            }
-
-            if (gamepad1.dpad_left && canToggleDriverControl) {
-                driverControl = !driverControl;
-
-                if (!driverControl) {
-                    rrDrive.pixelDropRed();
-                } else {
-                    rrDrive.updateMotorsFromStick(gamepad1);
-                    rrDrive.update();
-                }
+            if (gamepad1.dpad_left) {
+                rrDrive.pixelDropRed();
+            } else {
+                rrDrive.updateMotorsFromStick(gamepad1);
+                rrDrive.update();
             }
 
 
-            
+
             /**
              * Intake
              */
