@@ -49,33 +49,43 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
 
         //Trajectory sequences contain driving instructions
 
-        Trajectory traj1_1 = drive.trajectoryBuilder(new Pose2d(9, -61, Math.toRadians(-90)))
+        Trajectory traj1_1_1 = drive.trajectoryBuilder(new Pose2d(9, -61, Math.toRadians(-90)))
                 .lineToLinearHeading(new Pose2d(5, 35, Math.toRadians(90)))
-                .back(-5)
                 .build();
 
-        Trajectory traj1_2 = drive.trajectoryBuilder(startPose)
+        Trajectory traj1_1_2 = drive.trajectoryBuilder(traj1_1_1.end())
+                .back(5)
+                .build();
+
+        Trajectory traj1_2_1 = drive.trajectoryBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(15, 30, Math.toRadians(90)))
-                .back(-5)
                 .build();
 
-        Trajectory traj1_3 = drive.trajectoryBuilder(startPose)
+        Trajectory traj1_2_2 = drive.trajectoryBuilder(startPose)
+                .back(5)
+                .build();
+
+        Trajectory traj1_3_1 = drive.trajectoryBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(25, 42, Math.toRadians(90)))
                 .build();
 
-        Trajectory traj2_1_1 = drive.trajectoryBuilder(traj1_1.end())
+        Trajectory traj1_3_2 = drive.trajectoryBuilder(startPose)
+                .back(5)
+                .build();
+
+        Trajectory traj2_1_1 = drive.trajectoryBuilder(traj1_1_2.end())
                 .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
                 .build();
         Trajectory traj2_1_2 = drive.trajectoryBuilder(new Pose2d(38, -64, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(39, 34, Math.toRadians(180)))
                 .build();
 
-        Trajectory traj2_3_1 = drive.trajectoryBuilder(traj1_3.end())
+        Trajectory traj2_3_1 = drive.trajectoryBuilder(traj1_3_2.end())
                 .back(5)
                 .build();
 
 
-        Trajectory traj2_2_1 = drive.trajectoryBuilder(traj1_2.end())
+        Trajectory traj2_2_1 = drive.trajectoryBuilder(traj1_2_2.end())
                 .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
                 .build();
 
@@ -156,7 +166,9 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
         //switch between parking
         if(vision.getPropPosition() == 2) {
             sleep(1000);
-            drive.followTrajectory(traj1_1);
+            drive.followTrajectory(traj1_1_1);
+            sleep(1000);
+            drive.followTrajectory(traj1_1_2);
             sleep(1000);
             drive.followTrajectory(traj2_1_1);
             sleep(1000);
@@ -167,8 +179,10 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
             drive.followTrajectory(traj4_1);
         } else if (vision.getPropPosition() == 1) {
             sleep(1000);
-            drive.followTrajectory(traj1_2);
+            drive.followTrajectory(traj1_2_1);
             sleep(2000);
+            drive.followTrajectory(traj1_2_2);
+            sleep(1000);
             drive.followTrajectory(traj2_2_1);
             sleep(2000);
             drive.followTrajectory(traj2_2_2);
@@ -178,8 +192,10 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
             drive.followTrajectory(traj4_2);
         } else if (vision.getPropPosition() == 0) {
             sleep(1000);
-            drive.followTrajectory(traj1_3);
+            drive.followTrajectory(traj1_3_1);
             sleep(3000);
+            drive.followTrajectory(traj1_3_2);
+            sleep(1000);
             drive.followTrajectory(traj2_3_1);
             sleep(3000);
             drive.followTrajectory(traj2_3_2);
