@@ -27,8 +27,6 @@ public class RoadRunnerDriving {
     public Speeds currentSpeed;
     double speedMultiplier;
 
-    Pose2d currentPose = new Pose2d(0, 0, Math.toRadians(0));
-
     public enum Speeds {
         SLOW,
         NORMAL
@@ -37,7 +35,8 @@ public class RoadRunnerDriving {
     //Declare the constructor for the class
     public RoadRunnerDriving(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(currentPose);
+        /*PoseStorage.currentPose*/
+        drive.setPoseEstimate(PoseStorage.currentPose);
 
         // set default value for speed
         currentSpeed = Speeds.NORMAL;
@@ -85,20 +84,43 @@ public class RoadRunnerDriving {
         drive.update();
     }
 
-    public void updatePoseEstimate(double rot) {
-        Pose2d poseEstimate = drive.getPoseEstimate();
-        drive.setPoseEstimate(new Pose2d(poseEstimate.getX(), poseEstimate.getY(), rot));
-        drive.update();
-    }
-
-    public void drive10in() {
+    public void pixelDropRedFar() {
 
         if (!drive.isBusy()) {
-            Trajectory traj1 = drive.trajectoryBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(0, 20, Math.toRadians(90)))
+            Trajectory pixelDropRedFar = drive.trajectoryBuilder(drive.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(30,-33.5, Math.toRadians(180)))
                     .build();
+            drive.followTrajectory(pixelDropRedFar);
+        }
+    }
 
-            drive.followTrajectory(traj1);
+    public void pixelDropRedNear() {
+
+        if (!drive.isBusy()) {
+            Trajectory pixelDropRedNear = drive.trajectoryBuilder(drive.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(40,-33.5, Math.toRadians(180)))
+                    .build();
+            drive.followTrajectory(pixelDropRedNear);
+        }
+    }
+
+    public void pixelDropBlueFar() {
+
+        if (!drive.isBusy()) {
+            Trajectory pixelDropBlueFar = drive.trajectoryBuilder(drive.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(30,33.5, Math.toRadians(180)))
+                    .build();
+            drive.followTrajectory(pixelDropBlueFar);
+        }
+    }
+
+    public void pixelDropBlueNear() {
+
+        if (!drive.isBusy()) {
+            Trajectory pixelDropRed = drive.trajectoryBuilder(drive.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(40,33.5, Math.toRadians(180)))
+                    .build();
+            drive.followTrajectory(pixelDropRed);
         }
     }
 }

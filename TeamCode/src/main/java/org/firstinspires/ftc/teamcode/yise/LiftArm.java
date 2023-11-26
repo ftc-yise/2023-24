@@ -100,7 +100,7 @@ public class LiftArm {
                 hand.setTargetPosition(0);
                 break;
             case OUT:
-                hand.setTargetPosition(-130);
+                hand.setTargetPosition(-140);
                 break;
         }
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -115,7 +115,7 @@ public class LiftArm {
 
 
     public void openTrapdoor() {
-        trapdoor.setPosition(0.6);
+        trapdoor.setPosition(0.7);
     }
     public void closeTrapdoor() {
         trapdoor.setPosition(0.2);
