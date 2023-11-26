@@ -1,54 +1,33 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.RoadRunnerDriving;
-import org.firstinspires.ftc.teamcode.yise.RobotNavigation;
 
-@TeleOp(name="1 Controller Drive", group="Linear Opmode")
-public class SubsystemTest extends LinearOpMode {
+@TeleOp(name="Drive Blue", group="Linear Opmode")
+public class MainDriveProgramBlue extends LinearOpMode {
 
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
 
     boolean canToggleSlowMode = true;
-
     boolean canToggleHandPosition = true;
-    boolean handPositionIn = true;
     boolean driverControl = true;
-    boolean canToggleDriverControl = true;
 
     @Override
     public void runOpMode() {
+
+        // create instance of drive class
+        RoadRunnerDriving rrDrive = new RoadRunnerDriving(hardwareMap);
         // create instance of lift arm class
         LiftArm arm = new LiftArm(hardwareMap);
         // create instance of intake system class
         IntakeSystem intakeSystem = new IntakeSystem(hardwareMap);
-        //Instance of drive class
-        RoadRunnerDriving rrDrive = new RoadRunnerDriving(hardwareMap);
-
-        IMU imu = hardwareMap.get(IMU.class, "imu");
-
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.DOWN;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
-
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
-
-        imu.resetYaw();
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -60,12 +39,15 @@ public class SubsystemTest extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
+
             /**
              * Driving
              */
 
-            if (gamepad1.dpad_left) {
-                rrDrive.pixelDropRedFar();
+            if (gamepad1.dpad_up) {
+                rrDrive.pixelDropBlueFar();
+            } else if (gamepad1.dpad_down) {
+                rrDrive.pixelDropBlueNear();
             } else {
                 rrDrive.updateMotorsFromStick(gamepad1);
                 rrDrive.update();
@@ -76,9 +58,9 @@ public class SubsystemTest extends LinearOpMode {
             /**
              * Intake
              */
-            if (gamepad1.right_trigger > 0.75){
+            if (gamepad2.right_trigger > 0.5 || gamepad1.right_trigger > 0.5){
                 intakeSystem.runIntakeSystem(1);
-            } else if (gamepad1.left_trigger > 0.75){
+            } else if (gamepad2.left_trigger > 0.5 || gamepad1.left_trigger > 0.5){
                 intakeSystem.runIntakeSystem(-0.5);
             } else {
                 intakeSystem.runIntakeSystem(0);
@@ -89,13 +71,11 @@ public class SubsystemTest extends LinearOpMode {
             /**
              * Arm slides
              */
-            if (gamepad1.dpad_up){
-                //rrDrive.pixelDropRedFar();
+            if (gamepad2.dpad_up){
                 arm.extendAndDrop(LiftArm.Distance.FULL);
-            } else if (gamepad1.dpad_right){
-                //rrDrive.pixelDropRedNear();
+            } else if (gamepad2.dpad_right){
                 arm.extendAndDrop(LiftArm.Distance.HALF);
-            } else if (gamepad1.dpad_down) {
+            } else if (gamepad2.dpad_down) {
                 arm.retract();
             }
 
@@ -104,10 +84,27 @@ public class SubsystemTest extends LinearOpMode {
             /**
              * Trapdoor
              */
-            if (gamepad1.left_bumper) {
-                arm.closeTrapdoor();
-            } else if (gamepad1.right_bumper) {
+            if (gamepad2.right_bumper) {
                 arm.openTrapdoor();
+            } else {
+                arm.closeTrapdoor();
+            }
+
+
+
+            /**
+             * Airplane
+             */
+            if (gamepad2.x && gamepad2.a) {
+                //Release airplane servo
+            }
+
+
+            /**
+             * Climber
+             */
+            if (gamepad1.x && gamepad1.a) {
+                //Release climber
             }
 
 
@@ -146,8 +143,6 @@ public class SubsystemTest extends LinearOpMode {
             telemetry.addData("Horizontal input", gamepad1.left_stick_x);
             telemetry.addData("Vertical input: ", gamepad1.left_stick_y);
             telemetry.addData("Turn input: ", gamepad1.right_stick_x);
-
-            telemetry.addData("hand power: ", arm.hand.getPower());
             telemetry.update();
         }
     }
