@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.yise.RobotNavigation;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
 
-@TeleOp(name="Center Stage", group="Linear Opmode")
-public class MainDriveProgram extends LinearOpMode {
+@TeleOp(name="Drive Red", group="Linear Opmode")
+public class MainDriveProgramRed extends LinearOpMode {
 
 
     // Declare OpMode members for each of the 4 motors.
@@ -42,35 +42,15 @@ public class MainDriveProgram extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            /**
-             * Hand
-             */
-            if (!gamepad1.x) {
-                canToggleHandPosition = true;
-            }
-
-            if (gamepad1.x && canToggleHandPosition) {
-                canToggleHandPosition = false;
-
-                //Toggle between slow and normal speeds
-                switch (arm.handPosition) {
-                    case IN:
-                        arm.setHandPosition(LiftArm.HandPosition.OUT);
-                        break;
-                    case OUT:
-                        arm.setHandPosition(LiftArm.HandPosition.IN);
-                        break;
-                }
-            }
-
-
 
             /**
              * Driving
              */
 
-            if (gamepad1.dpad_left) {
-                rrDrive.pixelDropRed();
+            if (gamepad1.dpad_up) {
+                rrDrive.pixelDropRedFar();
+            } else if (gamepad1.dpad_down) {
+                rrDrive.pixelDropRedNear();
             } else {
                 rrDrive.updateMotorsFromStick(gamepad1);
                 rrDrive.update();
@@ -81,9 +61,9 @@ public class MainDriveProgram extends LinearOpMode {
             /**
              * Intake
              */
-            if (gamepad2.a){
+            if (gamepad2.right_trigger > 0.5 || gamepad1.right_trigger > 0.5){
                 intakeSystem.runIntakeSystem(1);
-            } else if (gamepad2.b){
+            } else if (gamepad2.left_trigger > 0.5 || gamepad1.left_trigger > 0.5){
                 intakeSystem.runIntakeSystem(-0.5);
             } else {
                 intakeSystem.runIntakeSystem(0);
@@ -107,10 +87,27 @@ public class MainDriveProgram extends LinearOpMode {
             /**
              * Trapdoor
              */
-            if (gamepad2.left_bumper) {
-                arm.closeTrapdoor();
-            } else if (gamepad2.right_bumper) {
+            if (gamepad2.right_bumper) {
                 arm.openTrapdoor();
+            } else {
+                arm.closeTrapdoor();
+            }
+
+
+
+            /**
+             * Airplane
+             */
+            if (gamepad2.x && gamepad2.a) {
+                //Release airplane servo
+            }
+
+
+            /**
+             * Climber
+             */
+            if (gamepad1.x && gamepad1.a) {
+                //Release climber
             }
 
 
