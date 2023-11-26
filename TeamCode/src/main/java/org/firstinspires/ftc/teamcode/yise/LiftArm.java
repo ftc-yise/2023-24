@@ -77,10 +77,10 @@ public class LiftArm {
                 slide.setTargetPosition(0);
                 break;
             case HALF:
-                slide.setTargetPosition(1200);
+                slide.setTargetPosition(4000);
                 break;
             case FULL:
-                slide.setTargetPosition(2400);
+                slide.setTargetPosition(8000);
                 break;
         }
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
