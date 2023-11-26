@@ -100,13 +100,13 @@ public class LiftArm {
                 hand.setTargetPosition(0);
                 break;
             case OUT:
-                hand.setTargetPosition(-120);
+                hand.setTargetPosition(-130);
                 break;
         }
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //120-0
-        hand.setPower(Math.abs((hand.getTargetPosition() - hand.getCurrentPosition())/120));
+        hand.setPower(1);
         if (!hand.isBusy()) {
             hand.setPower(0.05);
         }
@@ -119,6 +119,17 @@ public class LiftArm {
     }
     public void closeTrapdoor() {
         trapdoor.setPosition(0.2);
+    }
+
+    public void extendAndDrop(Distance targetDistance) {
+        setArmDistance(targetDistance);
+        setHandPosition(HandPosition.OUT);
+    }
+
+    public void retract() {
+        closeTrapdoor();
+        setHandPosition(HandPosition.IN);
+        setArmDistance(Distance.DEFAULT);
     }
 
 

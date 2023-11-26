@@ -50,13 +50,16 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
         //Trajectory sequences contain driving instructions
 
         Trajectory traj1_1_1 = drive.trajectoryBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(5, -45, Math.toRadians(-45)))
+                .lineToLinearHeading(new Pose2d(22, -33, Math.toRadians(0)))
                 .build();
 
         Trajectory traj1_1_2 = drive.trajectoryBuilder(traj1_1_1.end())
-                .back(-5)
+                .back(9)
                 .build();
 
+        Trajectory traj1_1_3 = drive.trajectoryBuilder(traj1_1_2.end())
+                .back(-6)
+                .build();
         Trajectory traj1_2_1 = drive.trajectoryBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(16, -39, Math.toRadians(-90)))
                 .build();
@@ -66,14 +69,14 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
                 .build();
 
         Trajectory traj1_3_1 = drive.trajectoryBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(25, -42, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(22, -43, Math.toRadians(-90)))
                 .build();
 
         Trajectory traj1_3_2 = drive.trajectoryBuilder(traj1_3_1.end())
-                .back(-5)
+                .back(-3)
                 .build();
 
-        Trajectory traj2_1_1 = drive.trajectoryBuilder(traj1_1_2.end())
+        Trajectory traj2_1_1 = drive.trajectoryBuilder(traj1_1_3.end())
                 .lineToLinearHeading(new Pose2d(38, -68, Math.toRadians(180)))
                 .build();
         Trajectory traj2_1_2 = drive.trajectoryBuilder(new Pose2d(38, -64, Math.toRadians(180)))
@@ -81,7 +84,7 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
                 .build();
 
         Trajectory traj2_3_1 = drive.trajectoryBuilder(traj1_3_2.end())
-                .back(-5)
+                .back(-2)
                 .build();
 
 
@@ -91,25 +94,15 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
 
         Trajectory traj2_2_2 = drive.trajectoryBuilder(new Pose2d(38, -64, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(45, -34, Math.toRadians(180)))
-                .addDisplacementMarker(2, () -> {
-                    arm.setArmDistance(LiftArm.Distance.HALF);
-                    arm.setHandPosition(LiftArm.HandPosition.OUT);
-                })
                 .build();
 
 
 
         Trajectory traj3_1 = drive.trajectoryBuilder(traj2_1_2.end())
                 .forward(-5)
-                .addDisplacementMarker(2, arm::openTrapdoor)
                 .build();
         Trajectory traj4_1_1 = drive.trajectoryBuilder(traj3_1.end())
                 .forward(10)
-                .addDisplacementMarker(2, () -> {
-                    arm.setHandPosition(LiftArm.HandPosition.IN);
-                    arm.setArmDistance(LiftArm.Distance.DEFAULT);
-                    arm.closeTrapdoor();
-                })
                 .build();
 
         Trajectory traj4_1_2 = drive.trajectoryBuilder(traj4_1_1.end())
@@ -117,20 +110,14 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
                 .build();
 
         Trajectory traj4_1_3 = drive.trajectoryBuilder(traj4_1_2.end())
-                .forward(-18)
+                .forward(-22)
                 .build();
 
         Trajectory traj3_2 = drive.trajectoryBuilder(traj2_2_2.end())
                 .forward(-5)
-                .addDisplacementMarker(2, arm::openTrapdoor)
                 .build();
        Trajectory traj4_2_1 = drive.trajectoryBuilder(traj3_2.end())
                 .forward(10)
-                .addDisplacementMarker(2, () -> {
-                    arm.setHandPosition(LiftArm.HandPosition.IN);
-                    arm.setArmDistance(LiftArm.Distance.DEFAULT);
-                    arm.closeTrapdoor();
-                })
                 .build();
 
         Trajectory traj4_2_2 = drive.trajectoryBuilder(traj4_2_1.end())
@@ -142,34 +129,17 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
                 .build();
 
         Trajectory traj2_3_2 = drive.trajectoryBuilder(traj2_3_1.end())
-                .lineToLinearHeading(new Pose2d(44, -68, Math.toRadians(180)))
-                .addDisplacementMarker(2, () -> {
-                    arm.setArmDistance(LiftArm.Distance.HALF);
-                    arm.setHandPosition(LiftArm.HandPosition.OUT);
-                })
+                .lineToLinearHeading(new Pose2d(38, -68, Math.toRadians(180)))
                 .build();
 
         Trajectory traj3_3 = drive.trajectoryBuilder(new Pose2d(38, -64, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(51, -34, Math.toRadians(180)))
-                .addDisplacementMarker(2, () -> {
-                    arm.setArmDistance(LiftArm.Distance.HALF);
-                    arm.setHandPosition(LiftArm.HandPosition.OUT);
-                })
+                .lineToLinearHeading(new Pose2d(45, -34, Math.toRadians(180)))
                 .build();
         Trajectory traj4_3 = drive.trajectoryBuilder(traj3_3.end())
-                .forward(-10)
-                .addDisplacementMarker(2, arm::openTrapdoor)
+                .forward(-5)
                 .build();
         Trajectory traj5_3_1 = drive.trajectoryBuilder(traj4_3.end())
                 .forward(10)
-                .addDisplacementMarker(0.2, () -> {
-                    arm.setHandPosition(LiftArm.HandPosition.IN);
-
-                })
-                .addDisplacementMarker(2, () -> {
-                    arm.setArmDistance(LiftArm.Distance.DEFAULT);
-                    arm.closeTrapdoor();
-                })
                 .build();
 
         Trajectory traj5_3_2 = drive.trajectoryBuilder(traj5_3_1.end())
@@ -191,16 +161,24 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
             drive.followTrajectory(traj1_1_1);
             sleep(1000);
             drive.followTrajectory(traj1_1_2);
+            drive.followTrajectory(traj1_1_3);
             sleep(1000);
             drive.followTrajectory(traj2_1_1);
             sleep(1000);
             drive.followTrajectory(traj2_1_2);
+            arm.setArmDistance(LiftArm.Distance.FULL);
+            arm.setHandPosition(LiftArm.HandPosition.OUT);
             sleep(1000);
             drive.followTrajectory(traj3_1);
+            arm.openTrapdoor();
             sleep(1000);
             drive.followTrajectory(traj4_1_1);
+            arm.setHandPosition(LiftArm.HandPosition.IN);
+            arm.setArmDistance(LiftArm.Distance.DEFAULT);
+            arm.closeTrapdoor();
             drive.followTrajectory(traj4_1_2);
             drive.followTrajectory(traj4_1_3);
+
         } else if (vision.getPropPosition() == 1) {
             sleep(1000);
             drive.followTrajectory(traj1_2_1);
@@ -211,9 +189,16 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
             sleep(2000);
             drive.followTrajectory(traj2_2_2);
             sleep(2000);
+            arm.setArmDistance(LiftArm.Distance.FULL);
+            arm.setHandPosition(LiftArm.HandPosition.OUT);
+            sleep(2000);
             drive.followTrajectory(traj3_2);
+            arm.openTrapdoor();
             sleep(2000);
             drive.followTrajectory(traj4_2_1);
+            arm.setHandPosition(LiftArm.HandPosition.IN);
+            arm.setArmDistance(LiftArm.Distance.DEFAULT);
+            arm.closeTrapdoor();
             drive.followTrajectory(traj4_2_2);
             drive.followTrajectory(traj4_2_3);
         } else if (vision.getPropPosition() == 0) {
@@ -227,9 +212,15 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
             drive.followTrajectory(traj2_3_2);
             sleep(3000);
             drive.followTrajectory(traj3_3);
+            arm.setArmDistance(LiftArm.Distance.HALF);
+            arm.setHandPosition(LiftArm.HandPosition.OUT);
             sleep(6000);
             drive.followTrajectory(traj4_3);
+            arm.openTrapdoor();
             drive.followTrajectory(traj5_3_1);
+            arm.setArmDistance(LiftArm.Distance.DEFAULT);
+            arm.closeTrapdoor();
+            arm.setHandPosition(LiftArm.HandPosition.IN);
             drive.followTrajectory(traj5_3_2);
             drive.followTrajectory(traj5_3_3);
         }
