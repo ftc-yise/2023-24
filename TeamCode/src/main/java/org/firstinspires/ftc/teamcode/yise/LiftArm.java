@@ -86,9 +86,9 @@ public class LiftArm {
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slide.setPower(1);
 
-        if (!slide.isBusy()) {
+       /* if (!slide.isBusy()) {
             slide.setPower(0.05);
-        }
+        }*/
     }
 
 
@@ -106,10 +106,11 @@ public class LiftArm {
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //120-0
-        hand.setPower(1);
+       hand.setPower(1);
+       /*
         if (!hand.isBusy()) {
             hand.setPower(0.05);
-        }
+        }*/
     }
 
 

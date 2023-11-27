@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 //import team class
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
@@ -44,166 +45,143 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
 
 
         //Bot starting position
-        Pose2d startPose = new Pose2d(9, 61, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(17, 61, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
 
         //Trajectory sequences contain driving instructions
 
-        Trajectory traj1_1_1 = drive.trajectoryBuilder(new Pose2d(9, -61, Math.toRadians(-90)))
-                .lineToLinearHeading(new Pose2d(5, 35, Math.toRadians(90)))
+        TrajectorySequence traj1_1 = drive.trajectorySequenceBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(22, 33, Math.toRadians(0)))
+                .back(9)
+                .back(-6)
+                .waitSeconds(2)
                 .build();
 
-        Trajectory traj1_1_2 = drive.trajectoryBuilder(traj1_1_1.end())
-                .back(5)
+        TrajectorySequence traj1_2 = drive.trajectorySequenceBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(16, 37, Math.toRadians(-90)))
+                .back(-5)
+                .waitSeconds(2)
                 .build();
 
-        Trajectory traj1_2_1 = drive.trajectoryBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(15, 30, Math.toRadians(90)))
+        TrajectorySequence traj1_3 = drive.trajectorySequenceBuilder(startPose)
+                .lineToLinearHeading(new Pose2d(22, 43, Math.toRadians(-90)))
+                .back(-3)
+                .waitSeconds(2)
                 .build();
 
-        Trajectory traj1_2_2 = drive.trajectoryBuilder(startPose)
-                .back(5)
-                .build();
 
-        Trajectory traj1_3_1 = drive.trajectoryBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(25, 42, Math.toRadians(90)))
-                .build();
-
-        Trajectory traj1_3_2 = drive.trajectoryBuilder(startPose)
-                .back(5)
-                .build();
-
-        Trajectory traj2_1_1 = drive.trajectoryBuilder(traj1_1_2.end())
+        TrajectorySequence traj2_1 = drive.trajectorySequenceBuilder(traj1_1.end())
                 .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
+                .waitSeconds(2)
                 .build();
-        Trajectory traj2_1_2 = drive.trajectoryBuilder(new Pose2d(38, -64, Math.toRadians(180)))
+
+        TrajectorySequence traj2_3 = drive.trajectorySequenceBuilder(traj1_3.end())
+                .back(-2)
+                .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
+                .waitSeconds(2)
+                .build();
+
+
+        TrajectorySequence traj2_2 = drive.trajectorySequenceBuilder(traj1_2.end())
+                .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
+                .waitSeconds(2)
+                .build();
+
+        TrajectorySequence traj3_1 = drive.trajectorySequenceBuilder(new Pose2d(38, 64, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(39, 34, Math.toRadians(180)))
-                .build();
-
-        Trajectory traj2_3_1 = drive.trajectoryBuilder(traj1_3_2.end())
-                .back(5)
-                .build();
-
-
-        Trajectory traj2_2_1 = drive.trajectoryBuilder(traj1_2_2.end())
-                .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
-                .build();
-
-        Trajectory traj2_2_2 = drive.trajectoryBuilder(new Pose2d(38, 64, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(45, 34, Math.toRadians(180)))
-                .addDisplacementMarker(2, () -> {
-                    arm.setArmDistance(LiftArm.Distance.HALF);
-                    arm.setHandPosition(LiftArm.HandPosition.OUT);
+                .addDisplacementMarker(10,() -> {
+                    arm.extendAndDrop(LiftArm.Distance.HALF);
                 })
-                .build();
 
-
-
-        Trajectory traj3_1 = drive.trajectoryBuilder(traj2_1_2.end())
-                .forward(5)
-                .addDisplacementMarker(2, arm::openTrapdoor)
                 .build();
-        Trajectory traj4_1 = drive.trajectoryBuilder(traj3_1.end())
-                .forward(-10)
-                .strafeLeft(-28)
-                .forward(18)
-                .addDisplacementMarker(2, () -> {
-                    arm.setHandPosition(LiftArm.HandPosition.IN);
-                    arm.setArmDistance(LiftArm.Distance.DEFAULT);
-                    arm.closeTrapdoor();
-                })
-                .build();
-
-        Trajectory traj3_2 = drive.trajectoryBuilder(traj2_2_2.end())
-                .forward(5)
-                .addDisplacementMarker(2, arm::openTrapdoor)
-                .build();
-        Trajectory traj4_2 = drive.trajectoryBuilder(traj3_2.end())
-                .forward(-10)
-                .strafeLeft(-28)
-                .forward(18)
-                .addDisplacementMarker(2, () -> {
-                    arm.setHandPosition(LiftArm.HandPosition.IN);
-                    arm.setArmDistance(LiftArm.Distance.DEFAULT);
-                    arm.closeTrapdoor();
-                })
-                .build();
-
-        Trajectory traj2_3_2 = drive.trajectoryBuilder(traj2_3_1.end())
-                .lineToLinearHeading(new Pose2d(44, 68, Math.toRadians(180)))
-                .addDisplacementMarker(2, () -> {
-                    arm.setArmDistance(LiftArm.Distance.HALF);
-                    arm.setHandPosition(LiftArm.HandPosition.OUT);
-                })
-                .build();
-
-        Trajectory traj3_3 = drive.trajectoryBuilder(new Pose2d(38, 64, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(51, 34, Math.toRadians(180)))
-                .addDisplacementMarker(2, () -> {
-                    arm.setArmDistance(LiftArm.Distance.HALF);
-                    arm.setHandPosition(LiftArm.HandPosition.OUT);
-                })
-                .build();
-        Trajectory traj4_3 = drive.trajectoryBuilder(traj3_3.end())
+        TrajectorySequence traj4_1 = drive.trajectorySequenceBuilder(traj3_1.end())
+                .forward(-5)
+                .addDisplacementMarker(5,arm::openTrapdoor)
                 .forward(10)
-                .addDisplacementMarker(2, arm::openTrapdoor)
-                .build();
-        Trajectory traj5_3 = drive.trajectoryBuilder(traj4_3.end())
-                .forward(-10)
-                .strafeLeft(-28)
-                .forward(18)
-                .addDisplacementMarker(0.2, () -> {
-                    arm.setHandPosition(LiftArm.HandPosition.IN);
-
-                })
-                .addDisplacementMarker(2, () -> {
-                    arm.setArmDistance(LiftArm.Distance.DEFAULT);
+                .addDisplacementMarker(20, () -> {
+                    arm.retract();
                     arm.closeTrapdoor();
                 })
+                .strafeLeft(-28)
+                .forward(-22)
                 .build();
+
+
+        TrajectorySequence traj3_2 = drive.trajectorySequenceBuilder(new Pose2d(38, 64, Math.toRadians(180)))
+                .addDisplacementMarker(10, () -> {
+                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                })
+                .lineToLinearHeading(new Pose2d(45, 34, Math.toRadians(180)))
+                .build();
+        TrajectorySequence traj4_2 = drive.trajectorySequenceBuilder(traj3_2.end())
+                .forward(-5)
+                .addDisplacementMarker(5, arm::openTrapdoor)
+                .forward(10)
+                .addDisplacementMarker(20,() -> {
+                    arm.retract();
+                    arm.closeTrapdoor();
+                })
+                .strafeLeft(-28)
+                .forward(-18)
+                .build();
+
+        TrajectorySequence traj3_3 = drive.trajectorySequenceBuilder(new Pose2d(38, 64, Math.toRadians(180)))
+                .addDisplacementMarker(() ->{
+                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                })
+                .lineToLinearHeading(new Pose2d(45, 34, Math.toRadians(180)))
+                .waitSeconds(2)
+                .build();
+        TrajectorySequence traj4_3 = drive.trajectorySequenceBuilder(traj3_3.end())
+                .forward(-5)
+                .waitSeconds(.3)
+                .addDisplacementMarker(arm::openTrapdoor)
+                .build();
+
+        TrajectorySequence traj5_3 = drive.trajectorySequenceBuilder(traj4_3.end())
+                .addDisplacementMarker(() -> {
+                    arm.retract();
+                    arm.closeTrapdoor();
+                })
+                .forward(10)
+                .strafeLeft(-28)
+                .forward(-18)
+                .build();
+        TrajectorySequence test = drive.trajectorySequenceBuilder(startPose)
+                .back(40)
+                .addDisplacementMarker(2, () -> {
+                    arm.retract();
+                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                    arm.openTrapdoor();
+                })
+                .waitSeconds(15)
+                .build();
+
+
 
         //Follow trajectories in order
         //switch between parking
         if(vision.getPropPosition() == 2) {
-            sleep(1000);
-            drive.followTrajectory(traj1_1_1);
-            sleep(1000);
-            drive.followTrajectory(traj1_1_2);
-            sleep(1000);
-            drive.followTrajectory(traj2_1_1);
-            sleep(1000);
-            drive.followTrajectory(traj2_1_2);
-            sleep(1000);
-            drive.followTrajectory(traj3_1);
-            sleep(1000);
-            drive.followTrajectory(traj4_1);
+            //drive.followTrajectorySequence(test);
+            drive.followTrajectorySequence(traj1_1);
+            drive.followTrajectorySequence(traj2_1);
+            drive.followTrajectorySequence(traj3_1);
+            drive.followTrajectorySequence(traj4_1);
+
         } else if (vision.getPropPosition() == 1) {
-            sleep(1000);
-            drive.followTrajectory(traj1_2_1);
-            sleep(2000);
-            drive.followTrajectory(traj1_2_2);
-            sleep(1000);
-            drive.followTrajectory(traj2_2_1);
-            sleep(2000);
-            drive.followTrajectory(traj2_2_2);
-            sleep(2000);
-            drive.followTrajectory(traj3_2);
-            sleep(2000);
-            drive.followTrajectory(traj4_2);
+            //drive.followTrajectorySequence(test);
+            drive.followTrajectorySequence(traj1_2);
+            drive.followTrajectorySequence(traj2_2);
+            drive.followTrajectorySequence(traj3_2);
+            drive.followTrajectorySequence(traj4_2);
+
         } else if (vision.getPropPosition() == 0) {
-            sleep(1000);
-            drive.followTrajectory(traj1_3_1);
-            sleep(3000);
-            drive.followTrajectory(traj1_3_2);
-            sleep(1000);
-            drive.followTrajectory(traj2_3_1);
-            sleep(3000);
-            drive.followTrajectory(traj2_3_2);
-            sleep(3000);
-            drive.followTrajectory(traj3_3);
-            sleep(6000);
-            drive.followTrajectory(traj4_3);
-            drive.followTrajectory(traj5_3);
+            //drive.followTrajectorySequence(test);
+            drive.followTrajectorySequence(traj1_3);
+            drive.followTrajectorySequence(traj2_3);
+            drive.followTrajectorySequence(traj3_3);
+            drive.followTrajectorySequence(traj4_3);
+            drive.followTrajectorySequence(traj5_3);
         }
     }
 }
