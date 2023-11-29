@@ -102,7 +102,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
                     arm.retract();
                     arm.closeTrapdoor();
                 })
-                .strafeLeft(-28)
+                .strafeLeft(28)
                 .forward(-22)
                 .build();
 
@@ -121,7 +121,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
                     arm.retract();
                     arm.closeTrapdoor();
                 })
-                .strafeLeft(-28)
+                .strafeLeft(28)
                 .forward(-18)
                 .build();
 
@@ -144,7 +144,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
                     arm.closeTrapdoor();
                 })
                 .forward(10)
-                .strafeLeft(-28)
+                .strafeLeft(28)
                 .forward(-18)
                 .build();
         TrajectorySequence test = drive.trajectorySequenceBuilder(startPose)
