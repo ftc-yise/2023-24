@@ -45,7 +45,7 @@ public class LedLights {
                 currentState = state;
                 break;
             case ENDGAME:
-                lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.SINELON_RAINBOW_PALETTE);
+                lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
                 currentState = state;
                 break;
             case INTAKE:
