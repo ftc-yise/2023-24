@@ -68,7 +68,7 @@ public class LiftArm {
 
         intakeHolder.setDirection(Servo.Direction.REVERSE);
 
-        closeLift();
+        secureHook();
 
         trapdoor.setPosition(.2);
 
@@ -99,10 +99,6 @@ public class LiftArm {
         }
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slide.setPower(1);
-
-        if (!slide.isBusy()) {
-            slide.setPower(0.05);
-        }
     }
 
 
@@ -114,11 +110,12 @@ public class LiftArm {
                 hand.setTargetPosition(0);
                 break;
             case OUT:
-                hand.setTargetPosition(-130);
+                hand.setTargetPosition(-140);
                 break;
         }
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         hand.setPower(1);
+
     }
 
 
@@ -132,11 +129,11 @@ public class LiftArm {
         trapdoor.setPosition(0.2);
     }
 
-    public void openLift() {
+    public void releaseHook() {
         lifterR.setPosition(Servo.MIN_POSITION);
         lifterL.setPosition(Servo.MIN_POSITION);
     }
-    public void closeLift() {
+    public void secureHook() {
         lifterR.setPosition(Servo.MAX_POSITION);
         lifterL.setPosition(Servo.MAX_POSITION);
     }
@@ -153,8 +150,10 @@ public class LiftArm {
     }
 
     public void holdArm() {
-        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        slide.setPower(0.05);
+        if (!slide.isBusy()) {
+            slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slide.setPower(0.05);
+        }
     }
 
 
