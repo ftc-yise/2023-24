@@ -13,6 +13,10 @@ public class LiftArm {
     public Servo trapdoor;
     public Servo intakeHolder;
 
+    public Servo lifterL;
+    public Servo lifterR;
+
+
     public HandPosition handPosition;
     public double intakePower = 0;
 
@@ -30,6 +34,11 @@ public class LiftArm {
 
 
     public enum TrapdoorPositions{
+        OPEN,
+        CLOSE
+    }
+
+    public enum lifterPositions{
         OPEN,
         CLOSE
     }
@@ -54,7 +63,12 @@ public class LiftArm {
         trapdoor = hardwareMap.get(Servo.class, "trapdoor");
         intakeHolder = hardwareMap.get(Servo.class, "intakeHolder");
 
+        lifterL = hardwareMap.get(Servo.class, "lifterL");
+        lifterR = hardwareMap.get(Servo.class, "lifterR");
+
         intakeHolder.setDirection(Servo.Direction.REVERSE);
+
+        closeLift();
 
         trapdoor.setPosition(.2);
 
@@ -100,7 +114,7 @@ public class LiftArm {
                 hand.setTargetPosition(0);
                 break;
             case OUT:
-                hand.setTargetPosition(-140);
+                hand.setTargetPosition(-130);
                 break;
         }
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -116,6 +130,15 @@ public class LiftArm {
     }
     public void closeTrapdoor() {
         trapdoor.setPosition(0.2);
+    }
+
+    public void openLift() {
+        lifterR.setPosition(Servo.MIN_POSITION);
+        lifterL.setPosition(Servo.MIN_POSITION);
+    }
+    public void closeLift() {
+        lifterR.setPosition(Servo.MAX_POSITION);
+        lifterL.setPosition(Servo.MAX_POSITION);
     }
 
     public void extendAndDrop(Distance targetDistance) {
