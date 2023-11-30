@@ -32,13 +32,37 @@ public class MeepMeepTesting {
                 .setColorScheme(new ColorSchemeRedDark())
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 10.38)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-41.5, -61, Math.toRadians(-90)))
-                                .lineToLinearHeading(new Pose2d(-41, -33, Math.toRadians(-90)))
-                                .lineToLinearHeading(new Pose2d(-54, -33, Math.toRadians(-90)))
-                                .lineToLinearHeading(new Pose2d(-54, -12, Math.toRadians(-90)))
-                                .lineToLinearHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                                .lineToLinearHeading(new Pose2d(42, -34, Math.toRadians(180)))
-                                .back(10)
+                        drive.trajectorySequenceBuilder(new Pose2d(-45, 61, Math.toRadians(90)))
+                                .waitSeconds(6)
+                                .lineToLinearHeading(new Pose2d(-47, 43, Math.toRadians(90)))
+                                .strafeLeft(10)
+                                .back(30)
+                                .lineToLinearHeading(new Pose2d(-20, 12, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(35, 12, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(45, 42, Math.toRadians(180)))
+                                .forward(-5)
+                                .forward(15)
+                                .lineToLinearHeading(new Pose2d(60, 60, Math.toRadians(180)))
+                                .build()
+                );
+
+        // Declare our first bot
+        RoadRunnerBotEntity BlueInnerBot = new DefaultBotBuilder(meepMeep)
+                // We set this bot to be blue
+                .setColorScheme(new ColorSchemeBlueDark())
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 10.38)
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(new Pose2d(17, 61, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(22, 33, Math.toRadians(0)))
+                                .back(9)
+                                .back(-6)
+                                .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
+                                .strafeLeft(4)
+                                .lineToLinearHeading(new Pose2d(39, 34, Math.toRadians(180)))
+                                .forward(-5)
+                                .forward(10)
+                                .strafeLeft(28)
+                                .forward(-22)
                                 .build()
                 );
 
