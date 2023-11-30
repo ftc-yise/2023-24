@@ -23,6 +23,7 @@ public class LiftArm {
     // Used to set pole height.
     public enum Distance {
         DEFAULT,
+        AUTO,
         HALF,
         FULL
     }
@@ -89,6 +90,9 @@ public class LiftArm {
         switch (targetDistance) {
             case DEFAULT:
                 slide.setTargetPosition(0);
+                break;
+            case AUTO:
+                slide.setTargetPosition(3000);
                 break;
             case HALF:
                 slide.setTargetPosition(5000);
