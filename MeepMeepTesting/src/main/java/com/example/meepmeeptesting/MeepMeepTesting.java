@@ -44,7 +44,7 @@ public class MeepMeepTesting {
                                 .back(30)
                                 .lineToLinearHeading(new Pose2d(-20, 12, Math.toRadians(180)))
                                 .lineToLinearHeading(new Pose2d(35, 12, Math.toRadians(180)))
-                                .lineToLinearHeading(new Pose2d(45, 34, Math.toRadians(180)))
+                                .lineToLinearHeading(new Pose2d(45, 42, Math.toRadians(180)))
                                 .forward(-5)
                                 .forward(15)
                                 .lineToLinearHeading(new Pose2d(60, 60, Math.toRadians(180)))
