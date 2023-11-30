@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.yise.PoseStorage;
+
 
 @Autonomous(name="Blue Park Interior", group="Linear Opmode")
 public class AutoBlueInteriorBackdrop extends LinearOpMode {
@@ -32,6 +34,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
 
         TensorflowVision vision = new TensorflowVision(hardwareMap);
 
+        PoseStorage pose = new PoseStorage();
         //Sense cones
         while (!isStarted()) {
             sleep(2000);
@@ -167,6 +170,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(traj2_1);
             drive.followTrajectorySequence(traj3_1);
             drive.followTrajectorySequence(traj4_1);
+            PoseStorage.currentPose = traj4_1.end();
 
         } else if (vision.getPropPosition() == 1) {
             //drive.followTrajectorySequence(test);
@@ -174,6 +178,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(traj2_2);
             drive.followTrajectorySequence(traj3_2);
             drive.followTrajectorySequence(traj4_2);
+            PoseStorage.currentPose = traj4_2.end();
 
         } else if (vision.getPropPosition() == 0) {
             //drive.followTrajectorySequence(test);
@@ -182,6 +187,8 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(traj3_3);
             drive.followTrajectorySequence(traj4_3);
             drive.followTrajectorySequence(traj5_3);
+            PoseStorage.currentPose = traj5_3.end();
+
         }
     }
 }
