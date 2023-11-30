@@ -13,12 +13,17 @@ public class LiftArm {
     public Servo trapdoor;
     public Servo intakeHolder;
 
+    public Servo lifterL;
+    public Servo lifterR;
+
+
     public HandPosition handPosition;
     public double intakePower = 0;
 
     // Used to set pole height.
     public enum Distance {
         DEFAULT,
+        AUTO,
         HALF,
         FULL
     }
@@ -30,6 +35,11 @@ public class LiftArm {
 
 
     public enum TrapdoorPositions{
+        OPEN,
+        CLOSE
+    }
+
+    public enum lifterPositions{
         OPEN,
         CLOSE
     }
@@ -54,7 +64,12 @@ public class LiftArm {
         trapdoor = hardwareMap.get(Servo.class, "trapdoor");
         intakeHolder = hardwareMap.get(Servo.class, "intakeHolder");
 
+        lifterL = hardwareMap.get(Servo.class, "lifterL");
+        lifterR = hardwareMap.get(Servo.class, "lifterR");
+
         intakeHolder.setDirection(Servo.Direction.REVERSE);
+
+        secureHook();
 
         trapdoor.setPosition(.2);
 
@@ -76,8 +91,11 @@ public class LiftArm {
             case DEFAULT:
                 slide.setTargetPosition(0);
                 break;
+            case AUTO:
+                slide.setTargetPosition(3000);
+                break;
             case HALF:
-                slide.setTargetPosition(4000);
+                slide.setTargetPosition(5000);
                 break;
             case FULL:
                 slide.setTargetPosition(8000);
@@ -85,10 +103,6 @@ public class LiftArm {
         }
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slide.setPower(1);
-
-        if (!slide.isBusy()) {
-            slide.setPower(0.05);
-        }
     }
 
 
@@ -104,21 +118,28 @@ public class LiftArm {
                 break;
         }
         hand.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //120-0
         hand.setPower(1);
-        if (!hand.isBusy()) {
-            hand.setPower(0.05);
-        }
+
     }
 
 
 
     public void openTrapdoor() {
-        trapdoor.setPosition(0.7);
+        if (slide.getCurrentPosition() > 3000) {
+            trapdoor.setPosition(0.7);
+        }
     }
     public void closeTrapdoor() {
         trapdoor.setPosition(0.2);
+    }
+
+    public void releaseHook() {
+        lifterR.setPosition(Servo.MIN_POSITION);
+        lifterL.setPosition(Servo.MIN_POSITION);
+    }
+    public void secureHook() {
+        lifterR.setPosition(Servo.MAX_POSITION);
+        lifterL.setPosition(Servo.MAX_POSITION);
     }
 
     public void extendAndDrop(Distance targetDistance) {
@@ -130,6 +151,13 @@ public class LiftArm {
         closeTrapdoor();
         setHandPosition(HandPosition.IN);
         setArmDistance(Distance.DEFAULT);
+    }
+
+    public void holdArm() {
+        if (!slide.isBusy()) {
+            slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slide.setPower(0.05);
+        }
     }
 
 

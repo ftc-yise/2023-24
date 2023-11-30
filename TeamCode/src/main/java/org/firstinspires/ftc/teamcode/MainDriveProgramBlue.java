@@ -118,7 +118,9 @@ public class MainDriveProgramBlue extends LinearOpMode {
              * Climber
              */
             if (gamepad1.x && gamepad1.a) {
-                //Release climber
+                arm.releaseHook();
+            } else {
+                arm.secureHook();
             }
 
 

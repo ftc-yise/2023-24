@@ -36,7 +36,7 @@ public class RoadRunnerDriving {
     public RoadRunnerDriving(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
         /*PoseStorage.currentPose*/
-        drive.setPoseEstimate(PoseStorage.currentPose);
+        drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
 
         // set default value for speed
         currentSpeed = Speeds.NORMAL;
@@ -88,7 +88,7 @@ public class RoadRunnerDriving {
 
         if (!drive.isBusy()) {
             Trajectory pixelDropRedFar = drive.trajectoryBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(30,-33.5, Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(31,-36, Math.toRadians(180)))
                     .build();
             drive.followTrajectory(pixelDropRedFar);
         }
@@ -98,7 +98,7 @@ public class RoadRunnerDriving {
 
         if (!drive.isBusy()) {
             Trajectory pixelDropRedNear = drive.trajectoryBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(40,-33.5, Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(40,-36, Math.toRadians(180)))
                     .build();
             drive.followTrajectory(pixelDropRedNear);
         }
@@ -108,7 +108,7 @@ public class RoadRunnerDriving {
 
         if (!drive.isBusy()) {
             Trajectory pixelDropBlueFar = drive.trajectoryBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(30,33.5, Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(31,36, Math.toRadians(180)))
                     .build();
             drive.followTrajectory(pixelDropBlueFar);
         }
@@ -118,7 +118,7 @@ public class RoadRunnerDriving {
 
         if (!drive.isBusy()) {
             Trajectory pixelDropRed = drive.trajectoryBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(40,33.5, Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(40,36, Math.toRadians(180)))
                     .build();
             drive.followTrajectory(pixelDropRed);
         }
