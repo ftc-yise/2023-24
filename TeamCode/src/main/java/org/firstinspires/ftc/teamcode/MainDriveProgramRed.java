@@ -70,6 +70,13 @@ public class MainDriveProgramRed extends LinearOpMode {
             }
 
 
+            /**
+             * Climber
+             */
+            if (gamepad1.right_stick_button) {
+            arm.releaseHook();
+            }
+
 
             /**
              * Arm slides
@@ -102,16 +109,6 @@ public class MainDriveProgramRed extends LinearOpMode {
              */
             if (gamepad2.x && gamepad2.a) {
                 //Release airplane servo
-            }
-
-
-            /**
-             * Climber
-             */
-            if (gamepad1.x && gamepad1.a) {
-                arm.releaseHook();
-            } else {
-                arm.secureHook();
             }
 
 

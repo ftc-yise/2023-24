@@ -54,46 +54,46 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
         //Trajectory sequences contain driving instructions
 
         TrajectorySequence traj1_1 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(22, 33, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(22, 33, Math.toRadians(90)))
                 .back(9)
                 .back(-6)
                 .waitSeconds(2)
                 .build();
 
         TrajectorySequence traj1_2 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(16, 37, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(16, 37, Math.toRadians(90)))
                 .back(-5)
                 .waitSeconds(2)
                 .build();
 
         TrajectorySequence traj1_3 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(22, 43, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(21, 43, Math.toRadians(90)))
                 .back(-3)
                 .waitSeconds(2)
                 .build();
 
 
         TrajectorySequence traj2_1 = drive.trajectorySequenceBuilder(traj1_1.end())
-                .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(30, 68, Math.toRadians(180)))
                 .waitSeconds(2)
                 .build();
 
         TrajectorySequence traj2_3 = drive.trajectorySequenceBuilder(traj1_3.end())
                 .back(-2)
-                .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(30, 68, Math.toRadians(180)))
                 .waitSeconds(2)
                 .build();
 
 
         TrajectorySequence traj2_2 = drive.trajectorySequenceBuilder(traj1_2.end())
-                .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(30, 68, Math.toRadians(180)))
                 .waitSeconds(2)
                 .build();
 
         TrajectorySequence traj3_1 = drive.trajectorySequenceBuilder(new Pose2d(38, 64, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(39, 34, Math.toRadians(180)))
                 .addDisplacementMarker(10,() -> {
-                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                    arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
 
                 .build();
@@ -112,7 +112,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
 
         TrajectorySequence traj3_2 = drive.trajectorySequenceBuilder(new Pose2d(38, 64, Math.toRadians(180)))
                 .addDisplacementMarker(10, () -> {
-                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                    arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
                 .lineToLinearHeading(new Pose2d(45, 34, Math.toRadians(180)))
                 .build();
@@ -130,9 +130,9 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
 
         TrajectorySequence traj3_3 = drive.trajectorySequenceBuilder(new Pose2d(38, 64, Math.toRadians(180)))
                 .addDisplacementMarker(() ->{
-                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                    arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
-                .lineToLinearHeading(new Pose2d(45, 34, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(45, 23, Math.toRadians(180)))
                 .waitSeconds(2)
                 .build();
         TrajectorySequence traj4_3 = drive.trajectorySequenceBuilder(traj3_3.end())
@@ -154,7 +154,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
                 .back(40)
                 .addDisplacementMarker(2, () -> {
                     arm.retract();
-                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                    arm.extendAndDrop(LiftArm.Distance.AUTO);
                     arm.openTrapdoor();
                 })
                 .waitSeconds(15)
@@ -172,7 +172,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(traj4_1);
             PoseStorage.currentPose = traj4_1.end();
 
-        } else if (vision.getPropPosition() == 1) {
+        } else if (vision.getPropPosition() == 0) {
             //drive.followTrajectorySequence(test);
             drive.followTrajectorySequence(traj1_2);
             drive.followTrajectorySequence(traj2_2);
@@ -180,7 +180,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(traj4_2);
             PoseStorage.currentPose = traj4_2.end();
 
-        } else if (vision.getPropPosition() == 0) {
+        } else if (vision.getPropPosition() == 1) {
             //drive.followTrajectorySequence(test);
             drive.followTrajectorySequence(traj1_3);
             drive.followTrajectorySequence(traj2_3);

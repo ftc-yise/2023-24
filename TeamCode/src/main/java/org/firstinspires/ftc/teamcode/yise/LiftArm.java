@@ -24,7 +24,8 @@ public class LiftArm {
     public enum Distance {
         DEFAULT,
         HALF,
-        FULL
+        FULL,
+        AUTO
     }
 
     public enum HandPosition{
@@ -96,6 +97,9 @@ public class LiftArm {
             case FULL:
                 slide.setTargetPosition(8000);
                 break;
+            case AUTO:
+                slide.setTargetPosition(3000);
+                break;
         }
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slide.setPower(1);
@@ -121,7 +125,7 @@ public class LiftArm {
 
 
     public void openTrapdoor() {
-        if (slide.getCurrentPosition() > 3000) {
+        if (slide.getCurrentPosition() > 300) {
             trapdoor.setPosition(0.7);
         }
     }
