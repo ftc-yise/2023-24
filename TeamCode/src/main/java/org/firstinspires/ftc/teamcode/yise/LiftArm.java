@@ -125,7 +125,7 @@ public class LiftArm {
 
 
     public void openTrapdoor() {
-        if (slide.getCurrentPosition() > 3000) {
+        if (slide.getCurrentPosition() > 2000) {
             trapdoor.setPosition(0.7);
         }
     }

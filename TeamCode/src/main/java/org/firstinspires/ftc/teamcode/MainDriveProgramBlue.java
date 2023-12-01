@@ -87,8 +87,13 @@ public class MainDriveProgramBlue extends LinearOpMode {
              */
             if (gamepad2.dpad_up){
                 arm.extendAndDrop(LiftArm.Distance.FULL);
+                arm.holdArm();
             } else if (gamepad2.dpad_right){
                 arm.extendAndDrop(LiftArm.Distance.HALF);
+                arm.holdArm();
+            } else if (gamepad2.dpad_left) {
+                arm.extendAndDrop(LiftArm.Distance.AUTO);
+                arm.holdArm();
             } else if (gamepad2.dpad_down) {
                 arm.retract();
             }
@@ -117,7 +122,7 @@ public class MainDriveProgramBlue extends LinearOpMode {
             /**
              * Climber
              */
-            if (gamepad1.x && gamepad1.a) {
+            if (gamepad1.right_stick_button || gamepad2.right_stick_button) {
                 arm.releaseHook();
             } else {
                 arm.secureHook();
