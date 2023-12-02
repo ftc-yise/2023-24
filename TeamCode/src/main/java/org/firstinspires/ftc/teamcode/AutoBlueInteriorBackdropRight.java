@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.yise.PoseStorage;
 
 
-@Autonomous(name="Blue Park Interior Right", group="Linear Opmode")
+@Autonomous(name="Blue Interior Right", group="Linear Opmode")
 public class AutoBlueInteriorBackdropRight extends LinearOpMode {
     //Initialize timer
     private ElapsedTime runtime = new ElapsedTime();

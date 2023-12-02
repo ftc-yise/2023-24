@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous(name="Red Park Interior Left", group="Linear Opmode")
+@Autonomous(name="Red Interior Left", group="Linear Opmode")
 public class AutoRedInteriorBackdropLeft extends LinearOpMode {
     //Initialize timer
     private ElapsedTime runtime = new ElapsedTime();

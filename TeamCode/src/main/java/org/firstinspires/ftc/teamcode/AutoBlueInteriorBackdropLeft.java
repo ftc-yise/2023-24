@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.yise.PoseStorage;
 import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
 
 
-@Autonomous(name="Blue Park Interior Left", group="Linear Opmode")
+@Autonomous(name="Blue Interior Left", group="Linear Opmode")
 public class AutoBlueInteriorBackdropLeft extends LinearOpMode {
     //Initialize timer
     private ElapsedTime runtime = new ElapsedTime();

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.yise.LedLights;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
 
-@Autonomous(name="Red Park Interior Right", group="Linear Opmode")
+@Autonomous(name="Red Interior Right", group="Linear Opmode")
 public class AutoRedInteriorBackdropRight extends LinearOpMode {
     //Initialize timer
     private ElapsedTime runtime = new ElapsedTime();

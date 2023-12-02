@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.yise.PoseStorage;
 import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
 
 
-@Autonomous(name="Blue Exterior", group="Linear Opmode")
+@Autonomous(name="Blue Exterior Right", group="Linear Opmode")
 public class AutoBlueExteriorBackdropRight extends LinearOpMode {
     //Initialize timer
     private ElapsedTime runtime = new ElapsedTime();
