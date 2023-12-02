@@ -54,7 +54,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
         //Trajectory sequences contain driving instructions
 
         TrajectorySequence traj1_1 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(22, 33, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(22, 33, Math.toRadians(0)))
                 .back(9)
                 .back(-6)
                 .waitSeconds(2)
@@ -67,45 +67,46 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
                 .build();
 
         TrajectorySequence traj1_3 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(21, 43, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(23, 43, Math.toRadians(90)))
                 .back(-3)
                 .waitSeconds(2)
                 .build();
 
 
         TrajectorySequence traj2_1 = drive.trajectorySequenceBuilder(traj1_1.end())
-                .lineToLinearHeading(new Pose2d(30, 68, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(40, 40, Math.toRadians(180)))
                 .waitSeconds(2)
                 .build();
 
         TrajectorySequence traj2_3 = drive.trajectorySequenceBuilder(traj1_3.end())
                 .back(-2)
-                .lineToLinearHeading(new Pose2d(30, 68, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
                 .waitSeconds(2)
                 .build();
 
 
         TrajectorySequence traj2_2 = drive.trajectorySequenceBuilder(traj1_2.end())
-                .lineToLinearHeading(new Pose2d(30, 68, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(38, 68, Math.toRadians(180)))
                 .waitSeconds(2)
                 .build();
 
-        TrajectorySequence traj3_1 = drive.trajectorySequenceBuilder(new Pose2d(38, 64, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(39, 34, Math.toRadians(180)))
+        TrajectorySequence traj3_1 = drive.trajectorySequenceBuilder(traj2_1.end())
+                .lineToLinearHeading(new Pose2d(45, 28, Math.toRadians(180)))
                 .addDisplacementMarker(10,() -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
-
+                .waitSeconds(2)
                 .build();
         TrajectorySequence traj4_1 = drive.trajectorySequenceBuilder(traj3_1.end())
                 .forward(-5)
                 .addDisplacementMarker(5,arm::openTrapdoor)
+                .waitSeconds(5)
                 .forward(10)
                 .addDisplacementMarker(20, () -> {
                     arm.retract();
                     arm.closeTrapdoor();
                 })
-                .strafeLeft(28)
+                .strafeLeft(20)
                 .forward(-22)
                 .build();
 
@@ -114,7 +115,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
                 .addDisplacementMarker(10, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
-                .lineToLinearHeading(new Pose2d(45, 34, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(44, 34, Math.toRadians(180)))
                 .build();
         TrajectorySequence traj4_2 = drive.trajectorySequenceBuilder(traj3_2.end())
                 .forward(-5)
@@ -132,13 +133,13 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
                 .addDisplacementMarker(() ->{
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
-                .lineToLinearHeading(new Pose2d(45, 23, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(44, 40, Math.toRadians(180)))
                 .waitSeconds(2)
                 .build();
         TrajectorySequence traj4_3 = drive.trajectorySequenceBuilder(traj3_3.end())
-                .forward(-5)
+                .addDisplacementMarker(1, arm::openTrapdoor)
+                .forward(-7)
                 .waitSeconds(.3)
-                .addDisplacementMarker(arm::openTrapdoor)
                 .build();
 
         TrajectorySequence traj5_3 = drive.trajectorySequenceBuilder(traj4_3.end())
@@ -147,7 +148,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
                     arm.closeTrapdoor();
                 })
                 .forward(10)
-                .strafeLeft(28)
+                .strafeLeft(29)
                 .forward(-18)
                 .build();
         TrajectorySequence test = drive.trajectorySequenceBuilder(startPose)
