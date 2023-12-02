@@ -76,13 +76,14 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
                 .build();
 
         TrajectorySequence traj1_3 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(22, -43, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(24, -43, Math.toRadians(-90)))
                 .back(-3)
                 .waitSeconds(2)
                 .build();
 
 
         TrajectorySequence traj2_1 = drive.trajectorySequenceBuilder(traj1_1.end())
+                .lineToLinearHeading(new Pose2d(38, -45, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(38, -68, Math.toRadians(180)))
                 .waitSeconds(2)
                 .build();
@@ -100,9 +101,9 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
                 .build();
 
         TrajectorySequence traj3_1 = drive.trajectorySequenceBuilder(new Pose2d(38, -64, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(39, -34, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(47, -28, Math.toRadians(180)))
                 .addDisplacementMarker(10,() -> {
-                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                    arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
 
                 .build();
@@ -121,9 +122,9 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
 
         TrajectorySequence traj3_2 = drive.trajectorySequenceBuilder(new Pose2d(38, -64, Math.toRadians(180)))
                 .addDisplacementMarker(10, () -> {
-                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                    arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
-                .lineToLinearHeading(new Pose2d(45, -34, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(47, -34, Math.toRadians(180)))
                 .build();
        TrajectorySequence traj4_2 = drive.trajectorySequenceBuilder(traj3_2.end())
                .forward(-5)
@@ -139,23 +140,24 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
 
         TrajectorySequence traj3_3 = drive.trajectorySequenceBuilder(new Pose2d(38, -64, Math.toRadians(180)))
                 .addDisplacementMarker(() ->{
-                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                    arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
-                .lineToLinearHeading(new Pose2d(45, -34, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(46, -40, Math.toRadians(180)))
+                .forward(-4)
                 .waitSeconds(2)
                 .build();
         TrajectorySequence traj4_3 = drive.trajectorySequenceBuilder(traj3_3.end())
-                .forward(-5)
-                .waitSeconds(.3)
                 .addDisplacementMarker(arm::openTrapdoor)
+                .forward(4)
+                .waitSeconds(.6)
                 .build();
 
         TrajectorySequence traj5_3 = drive.trajectorySequenceBuilder(traj4_3.end())
-               .addDisplacementMarker(() -> {
+               .addDisplacementMarker(8,() -> {
                    arm.retract();
                    arm.closeTrapdoor();
                })
-                .forward(10)
+                .forward(6)
                 .strafeLeft(-28)
                 .forward(-18)
                 .build();
@@ -163,7 +165,7 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
                 .back(40)
                 .addDisplacementMarker(2, () -> {
                     arm.retract();
-                    arm.extendAndDrop(LiftArm.Distance.HALF);
+                    arm.extendAndDrop(LiftArm.Distance.AUTO);
                     arm.openTrapdoor();
                 })
                 .waitSeconds(15)
@@ -173,7 +175,7 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
 
         //Follow trajectories in order
         //switch between parking
-        if(vision.getPropPosition() == 2) {
+        if(vision.getPropPosition() == 0) {
             //drive.followTrajectorySequence(test);
             drive.followTrajectorySequence(traj1_1);
             drive.followTrajectorySequence(traj2_1);
@@ -187,7 +189,7 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(traj3_2);
             drive.followTrajectorySequence(traj4_2);
 
-        } else if (vision.getPropPosition() == 0) {
+        } else if (vision.getPropPosition() == 2) {
             //drive.followTrajectorySequence(test);
             drive.followTrajectorySequence(traj1_3);
             drive.followTrajectorySequence(traj2_3);

@@ -118,14 +118,11 @@ public class MainDriveProgramBlue extends LinearOpMode {
                 //Release airplane servo
             }
 
-
             /**
              * Climber
              */
             if (gamepad1.right_stick_button || gamepad2.right_stick_button) {
                 arm.releaseHook();
-            } else {
-                arm.secureHook();
             }
 
 

@@ -70,6 +70,13 @@ public class MainDriveProgramRed extends LinearOpMode {
             }
 
 
+            /**
+             * Climber
+             */
+            if (gamepad1.right_stick_button) {
+            arm.releaseHook();
+            }
+
 
             /**
              * Arm slides
