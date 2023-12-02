@@ -103,7 +103,7 @@ public class TensorflowVision {
             x = (recognition.getLeft() + recognition.getRight())/2;
         }
 
-        if (x > 250) {
+        if (x > 300) {
             return 0;
         } else {
             return 1;

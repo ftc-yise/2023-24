@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
+import org.firstinspires.ftc.teamcode.yise.LedLights;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.RoadRunnerDriving;
 
@@ -19,6 +20,8 @@ public class MainDriveProgramBlue extends LinearOpMode {
     boolean canToggleHandPosition = true;
     boolean driverControl = true;
 
+    boolean inEndGame = false;
+
     @Override
     public void runOpMode() {
 
@@ -29,9 +32,14 @@ public class MainDriveProgramBlue extends LinearOpMode {
         // create instance of intake system class
         IntakeSystem intakeSystem = new IntakeSystem(hardwareMap);
 
+        LedLights leds = new LedLights(hardwareMap);
+
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
+        leds.setLed(LedLights.ledStates.BLUE);
+
 
         waitForStart();
         runtime.reset();
@@ -39,6 +47,12 @@ public class MainDriveProgramBlue extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
+
+
+            if (!inEndGame && getRuntime() > 90) {
+                inEndGame = true;
+                leds.setLed(LedLights.ledStates.ENDGAME);
+            }
 
             /**
              * Driving
@@ -73,8 +87,13 @@ public class MainDriveProgramBlue extends LinearOpMode {
              */
             if (gamepad2.dpad_up){
                 arm.extendAndDrop(LiftArm.Distance.FULL);
+                arm.holdArm();
             } else if (gamepad2.dpad_right){
                 arm.extendAndDrop(LiftArm.Distance.HALF);
+                arm.holdArm();
+            } else if (gamepad2.dpad_left) {
+                arm.extendAndDrop(LiftArm.Distance.AUTO);
+                arm.holdArm();
             } else if (gamepad2.dpad_down) {
                 arm.retract();
             }
@@ -102,7 +121,7 @@ public class MainDriveProgramBlue extends LinearOpMode {
             /**
              * Climber
              */
-            if (gamepad1.right_stick_button) {
+            if (gamepad1.right_stick_button || gamepad2.right_stick_button) {
                 arm.releaseHook();
             }
 

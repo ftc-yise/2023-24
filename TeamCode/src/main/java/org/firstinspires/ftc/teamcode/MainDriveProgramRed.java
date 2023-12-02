@@ -87,6 +87,9 @@ public class MainDriveProgramRed extends LinearOpMode {
             } else if (gamepad2.dpad_right){
                 arm.extendAndDrop(LiftArm.Distance.HALF);
                 arm.holdArm();
+            } else if (gamepad2.dpad_left) {
+                arm.extendAndDrop(LiftArm.Distance.AUTO);
+                arm.holdArm();
             } else if (gamepad2.dpad_down) {
                 arm.retract();
             }
@@ -109,6 +112,16 @@ public class MainDriveProgramRed extends LinearOpMode {
              */
             if (gamepad2.x && gamepad2.a) {
                 //Release airplane servo
+            }
+
+
+            /**
+             * Climber
+             */
+            if (gamepad1.right_stick_button || gamepad2.right_stick_button) {
+                arm.releaseHook();
+            } else {
+                arm.secureHook();
             }
 
 

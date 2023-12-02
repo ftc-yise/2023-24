@@ -12,6 +12,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 //import team class
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
+import org.firstinspires.ftc.teamcode.yise.LedLights;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -32,19 +33,30 @@ public class AutoRedInteriorBackdrop extends LinearOpMode {
 
         TensorflowVision vision = new TensorflowVision(hardwareMap);
 
+        LedLights leds = new LedLights(hardwareMap);
+
+        double time = getRuntime();
+
+
         //Sense cones
         while (!isStarted()) {
+
             sleep(2000);
+
             Prop = vision.getPropPosition();
 
+            leds.setLed(LedLights.ledStates.DARK);
+
             telemetry.addData("Prop: ", Prop);
+            telemetry.addData("Time:", getRuntime());
             telemetry.update();
         }
 
         if (isStopRequested()) return;
 
+        leds.setLed(LedLights.ledStates.RED);
 
-        //Bot starting position
+            //Bot starting position
         Pose2d startPose = new Pose2d(17, -61, Math.toRadians(-90));
         drive.setPoseEstimate(startPose);
 

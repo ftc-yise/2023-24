@@ -23,9 +23,9 @@ public class LiftArm {
     // Used to set pole height.
     public enum Distance {
         DEFAULT,
+        AUTO,
         HALF,
-        FULL,
-        AUTO
+        FULL
     }
 
     public enum HandPosition{
@@ -91,14 +91,14 @@ public class LiftArm {
             case DEFAULT:
                 slide.setTargetPosition(0);
                 break;
+            case AUTO:
+                slide.setTargetPosition(2000);
+                break;
             case HALF:
                 slide.setTargetPosition(5000);
                 break;
             case FULL:
                 slide.setTargetPosition(8000);
-                break;
-            case AUTO:
-                slide.setTargetPosition(2000);
                 break;
         }
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -125,7 +125,7 @@ public class LiftArm {
 
 
     public void openTrapdoor() {
-        if (slide.getCurrentPosition() > 300) {
+        if (slide.getCurrentPosition() > 1000) {
             trapdoor.setPosition(0.7);
         }
     }

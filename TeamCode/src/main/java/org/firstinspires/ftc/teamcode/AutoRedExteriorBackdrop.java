@@ -7,13 +7,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.yise.LedLights;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.PoseStorage;
 import org.firstinspires.ftc.teamcode.yise.TensorflowVision;
 
-
-@Autonomous(name="Blue Exterior", group="Linear Opmode")
-public class AutoBlueExteriorBackdrop extends LinearOpMode {
+@Autonomous(name="Red Exterior", group="Linear Opmode")
+public class AutoRedExteriorBackdrop extends LinearOpMode {
     //Initialize timer
     private ElapsedTime runtime = new ElapsedTime();
     int prop;
@@ -39,53 +39,48 @@ public class AutoBlueExteriorBackdrop extends LinearOpMode {
 
 
         //Bot starting position
-        Pose2d startPose = new Pose2d(-41.5, 61, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(-41.5, -61, Math.toRadians(-90));
         drive.setPoseEstimate(startPose);
 
         //Trajectory sequences contain driving instructions
 
         TrajectorySequence dropPixelLeft = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-33, 44, Math.toRadians(130)))
+                .lineToLinearHeading(new Pose2d(-43, -46, Math.toRadians(-60)))
                 .build();
 
         TrajectorySequence dropPixelCenter = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-41, 37, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-41, -37, Math.toRadians(-90)))
                 .build();
 
         TrajectorySequence dropPixelRight = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-43, 44, Math.toRadians(60)))
+                .lineToLinearHeading(new Pose2d(-33, -46, Math.toRadians(-130)))
                 .build();
 
         TrajectorySequence driveToBoardLeft = drive.trajectorySequenceBuilder(dropPixelLeft.end())
-                .lineToLinearHeading(new Pose2d(-42, 43, Math.toRadians(90)))
-                .lineToLinearHeading(new Pose2d(-42, 12, Math.toRadians(180)))
-
-                .lineToLinearHeading(new Pose2d(35, 12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(42, 42, Math.toRadians(180)))
-                .waitSeconds(0.5)
-                .back(4)
+                .lineToLinearHeading(new Pose2d(-32, -42, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-32, -12, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(35, -12, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(48, -30, Math.toRadians(180)))
                 .addDisplacementMarker(60, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
                 .build();
 
         TrajectorySequence driveToBoardCenter = drive.trajectorySequenceBuilder(dropPixelCenter.end())
-                .lineToLinearHeading(new Pose2d(-54, 35, Math.toRadians(90)))
-                .lineToLinearHeading(new Pose2d(-54, 12, Math.toRadians(180)))
-
-                .lineToLinearHeading(new Pose2d(35, 12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(46, 36, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-54, -35, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-54, -12, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(35, -12, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(48, -36, Math.toRadians(180)))
                 .addDisplacementMarker(60, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
                 .build();
 
         TrajectorySequence driveToBoardRight = drive.trajectorySequenceBuilder(dropPixelRight.end())
-                .lineToLinearHeading(new Pose2d(-32, 42, Math.toRadians(90)))
-                .lineToLinearHeading(new Pose2d(-32, 12, Math.toRadians(180)))
-
-                .lineToLinearHeading(new Pose2d(35, 12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(46, 30, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(-42, -43, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-42, -12, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(35, -12, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(48, -42, Math.toRadians(180)))
                 .addDisplacementMarker(60, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
@@ -104,7 +99,7 @@ public class AutoBlueExteriorBackdrop extends LinearOpMode {
 
         //Follow trajectories in order
         //switch between parking
-        if(prop == 2) {
+        if(prop == 1) {
             drive.followTrajectorySequence(dropPixelLeft);
             sleep(500);
             drive.followTrajectorySequence(driveToBoardLeft);
@@ -116,7 +111,7 @@ public class AutoBlueExteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(driveForwardLeft);
             PoseStorage.currentPose = drive.getPoseEstimate();
 
-        } else if (prop == 1) {
+        } else if (prop == 0) {
             drive.followTrajectorySequence(dropPixelCenter);
             sleep(500);
             drive.followTrajectorySequence(driveToBoardCenter);
@@ -128,7 +123,7 @@ public class AutoBlueExteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(driveForwardCenter);
             PoseStorage.currentPose = drive.getPoseEstimate();
 
-        } else if (prop == 0) {
+        } else if (prop == 2) {
             drive.followTrajectorySequence(dropPixelRight);
             sleep(500);
             drive.followTrajectorySequence(driveToBoardRight);

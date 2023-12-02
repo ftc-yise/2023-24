@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.yise.IntakeSystem;
 import org.firstinspires.ftc.teamcode.yise.LiftArm;
 import org.firstinspires.ftc.teamcode.yise.RoadRunnerDriving;
 import org.firstinspires.ftc.teamcode.yise.RobotNavigation;
+import org.firstinspires.ftc.teamcode.yise.LedLights;
 
 @TeleOp(name="1 Controller Drive", group="Linear Opmode")
 public class SubsystemTest extends LinearOpMode {
@@ -26,9 +27,11 @@ public class SubsystemTest extends LinearOpMode {
     boolean canToggleSlowMode = true;
 
     boolean canToggleHandPosition = true;
-    boolean handPositionIn = true;
-    boolean driverControl = true;
+    boolean Intakepos = true;
+    float Default = 0f;
+    float DefaultAddition = 0f;
     boolean canToggleDriverControl = true;
+    double time = getRuntime();
 
     @Override
     public void runOpMode() {
@@ -38,6 +41,9 @@ public class SubsystemTest extends LinearOpMode {
         IntakeSystem intakeSystem = new IntakeSystem(hardwareMap);
         //Instance of drive class
         RoadRunnerDriving rrDrive = new RoadRunnerDriving(hardwareMap);
+
+        //Instance of led class
+        LedLights leds = new LedLights(hardwareMap);
 
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
@@ -64,6 +70,22 @@ public class SubsystemTest extends LinearOpMode {
              * Driving
              */
 
+            if (gamepad1.a) {
+                Default = 1f;
+                DefaultAddition = 2f;
+            } else if (gamepad1.b) {
+                Default = 2f;
+                DefaultAddition = 1f;
+            }
+
+            if (Default == 1f){
+                leds.setLed(LedLights.ledStates.RED);
+            } else if (Default == 2f){
+                leds.setLed(LedLights.ledStates.BLUE);
+            }else if (Default == 0f){
+                leds.setLed(LedLights.ledStates.DARK);
+            }
+
             if (gamepad1.dpad_left) {
                 rrDrive.pixelDropRedFar();
             } else {
@@ -71,15 +93,30 @@ public class SubsystemTest extends LinearOpMode {
                 rrDrive.update();
             }
 
+            telemetry.addData("Time", time);
+            telemetry.addData("Tim", getRuntime());
 
+            if (time == 10){
+                leds.setLed(LedLights.ledStates.ENDGAME);
+                Default = 4f;
+            }
 
             /**
              * Intake
              */
             if (gamepad1.right_trigger > 0.75){
                 intakeSystem.runIntakeSystem(1);
+                leds.setLed(LedLights.ledStates.INTAKE);
+                Default = Default + DefaultAddition;
+                Intakepos = false;
             } else if (gamepad1.left_trigger > 0.75){
                 intakeSystem.runIntakeSystem(-0.5);
+                leds.setLed(LedLights.ledStates.INTAKE);
+                Default = Default + DefaultAddition;
+                Intakepos = false;
+            } else if (!Intakepos && gamepad1.right_trigger < 0.75 && gamepad1.right_trigger < 0.75) {
+                intakeSystem.runIntakeSystem(0);
+                Default = Default - DefaultAddition;
             } else {
                 intakeSystem.runIntakeSystem(0);
             }
@@ -110,8 +147,12 @@ public class SubsystemTest extends LinearOpMode {
              */
             if (gamepad1.left_bumper) {
                 arm.closeTrapdoor();
+                Default = Default - DefaultAddition;
             } else if (gamepad1.right_bumper) {
                 arm.openTrapdoor();
+                leds.setLed(LedLights.ledStates.OPEN);
+                Default = Default + DefaultAddition;
+
             }
 
 
