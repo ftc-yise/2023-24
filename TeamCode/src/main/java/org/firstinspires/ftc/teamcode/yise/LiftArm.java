@@ -92,7 +92,7 @@ public class LiftArm {
                 slide.setTargetPosition(0);
                 break;
             case AUTO:
-                slide.setTargetPosition(3000);
+                slide.setTargetPosition(2000);
                 break;
             case HALF:
                 slide.setTargetPosition(5000);
@@ -125,7 +125,7 @@ public class LiftArm {
 
 
     public void openTrapdoor() {
-        if (slide.getCurrentPosition() > 2000) {
+        if (slide.getCurrentPosition() > 1000) {
             trapdoor.setPosition(0.7);
         }
     }
