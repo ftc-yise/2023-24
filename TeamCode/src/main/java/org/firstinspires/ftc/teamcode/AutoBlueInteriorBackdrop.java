@@ -178,7 +178,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(traj2_1);
             drive.followTrajectorySequence(traj3_1);
             drive.followTrajectorySequence(traj4_1);
-            PoseStorage.currentPose = traj4_1.end();
+            PoseStorage.currentPose = drive.getPoseEstimate();
 
         } else if (vision.getPropPosition() == 1) {
             //drive.followTrajectorySequence(test);
@@ -186,7 +186,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(traj2_2);
             drive.followTrajectorySequence(traj3_2);
             drive.followTrajectorySequence(traj4_2);
-            PoseStorage.currentPose = traj4_2.end();
+            PoseStorage.currentPose = drive.getPoseEstimate();
 
         } else if (vision.getPropPosition() == 0) {
             //drive.followTrajectorySequence(test);
@@ -195,7 +195,7 @@ public class AutoBlueInteriorBackdrop extends LinearOpMode {
             drive.followTrajectorySequence(traj3_3);
             drive.followTrajectorySequence(traj4_3);
             drive.followTrajectorySequence(traj5_3);
-            PoseStorage.currentPose = traj5_3.end();
+            PoseStorage.currentPose = drive.getPoseEstimate();
 
         }
     }
