@@ -53,7 +53,7 @@ public class AutoBlueExteriorBackdropLeft extends LinearOpMode {
                 .build();
 
         TrajectorySequence dropPixelRight = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-43, 44, Math.toRadians(60)))
+                .lineToLinearHeading(new Pose2d(-41, 44, Math.toRadians(60)))
                 .build();
 
         TrajectorySequence driveToBoardLeft = drive.trajectorySequenceBuilder(dropPixelLeft.end())
@@ -61,7 +61,7 @@ public class AutoBlueExteriorBackdropLeft extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-42, 12, Math.toRadians(180)))
 
                 .lineToLinearHeading(new Pose2d(35, 12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(42, 42, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(42, 30, Math.toRadians(180)))
                 .waitSeconds(0.5)
                 .back(4)
                 .addDisplacementMarker(60, () -> {
@@ -74,7 +74,9 @@ public class AutoBlueExteriorBackdropLeft extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-54, 12, Math.toRadians(180)))
 
                 .lineToLinearHeading(new Pose2d(35, 12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(46, 36, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(42, 36, Math.toRadians(180)))
+                .waitSeconds(0.5)
+                .back(4)
                 .addDisplacementMarker(60, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
@@ -85,7 +87,9 @@ public class AutoBlueExteriorBackdropLeft extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-32, 12, Math.toRadians(180)))
 
                 .lineToLinearHeading(new Pose2d(35, 12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(46, 30, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(42, 42, Math.toRadians(180)))
+                .waitSeconds(0.5)
+                .back(4)
                 .addDisplacementMarker(60, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })

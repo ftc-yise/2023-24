@@ -46,8 +46,6 @@ public class AutoBlueInteriorBackdropLeft extends LinearOpMode {
         }
 
         if (isStopRequested()) return;
-      
-        leds.setLed(LedLights.ledStates.BLUE);
 
         //Bot starting position
         Pose2d startPose = new Pose2d(17, 61, Math.toRadians(90));
@@ -171,6 +169,7 @@ public class AutoBlueInteriorBackdropLeft extends LinearOpMode {
         if(vision.getPropPosition() == 2) {
             //drive.followTrajectorySequence(test);
             drive.followTrajectorySequence(traj1_1);
+            leds.setLed(LedLights.ledStates.BLUE);
             drive.followTrajectorySequence(traj2_1);
             drive.followTrajectorySequence(traj3_1);
             drive.followTrajectorySequence(traj4_1);
@@ -179,6 +178,7 @@ public class AutoBlueInteriorBackdropLeft extends LinearOpMode {
         } else if (vision.getPropPosition() == 0) {
             //drive.followTrajectorySequence(test);
             drive.followTrajectorySequence(traj1_2);
+            leds.setLed(LedLights.ledStates.BLUE);
             drive.followTrajectorySequence(traj2_2);
             drive.followTrajectorySequence(traj3_2);
             drive.followTrajectorySequence(traj4_2);
@@ -187,6 +187,7 @@ public class AutoBlueInteriorBackdropLeft extends LinearOpMode {
         } else if (vision.getPropPosition() == 1) {
             //drive.followTrajectorySequence(test);
             drive.followTrajectorySequence(traj1_3);
+            leds.setLed(LedLights.ledStates.BLUE);
             drive.followTrajectorySequence(traj2_3);
             drive.followTrajectorySequence(traj3_3);
             drive.followTrajectorySequence(traj4_3);
