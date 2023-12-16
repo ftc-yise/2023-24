@@ -59,7 +59,7 @@ public class AutoRedExteriorBackdropLeft extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-32, -42, Math.toRadians(-90)))
                 .lineToLinearHeading(new Pose2d(-32, -12, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(48, -30, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(48, -32, Math.toRadians(180)))
                 .addDisplacementMarker(60, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
@@ -79,7 +79,7 @@ public class AutoRedExteriorBackdropLeft extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-42, -43, Math.toRadians(-90)))
                 .lineToLinearHeading(new Pose2d(-42, -12, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(48, -42, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(48, -40, Math.toRadians(180)))
                 .addDisplacementMarker(60, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })

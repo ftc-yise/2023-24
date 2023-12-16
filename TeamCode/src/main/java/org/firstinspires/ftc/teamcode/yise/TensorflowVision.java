@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.yise;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.apache.commons.math3.analysis.function.Exp;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.WhiteBalanceControl;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -19,17 +22,18 @@ public class TensorflowVision {
 
     private static final String[] LABELS = {
             "Red Prop",
+            "Blue Prop"
     };
 
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
-    private TfodProcessor tfod;
+    public TfodProcessor tfod;
 
     /**
      * The variable to store our instance of the vision portal.
      */
-    private VisionPortal visionPortal;
+    public VisionPortal visionPortal;
 
     // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
     // first.
@@ -39,7 +43,7 @@ public class TensorflowVision {
 
                 // Use setModelAssetName() if the TF Model is built in as an asset.
                 // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-                .setModelAssetName("testmodel2.tflite")
+                .setModelAssetName("new model.tflite")
                 //.setModelFileName("testmodel.tflite")
 
                 .setModelLabels(LABELS)
@@ -64,7 +68,7 @@ public class TensorflowVision {
         //builder.setCameraResolution(new Size(640, 480));
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
-        //builder.enableCameraMonitoring(true);
+        //builder.enableLiveView(true);
 
         // Set the stream format; MJPEG uses less bandwidth than default YUY2.
         //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
@@ -81,7 +85,7 @@ public class TensorflowVision {
         visionPortal = builder.build();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        //tfod.setMinResultConfidence(0.75f);
+        //tfod.setMinResultConfidence(0.8f);
 
         // Disable or re-enable the TFOD processor at any time.
         //visionPortal.setProcessorEnabled(tfod, true);
@@ -89,8 +93,9 @@ public class TensorflowVision {
     }
 
     public int getPropPosition() {
-
+        //wbControl = visionPortal.getCameraControl(WhiteBalanceControl.class);
         List<Recognition> currentRecognitions = tfod.getRecognitions();
+
 
         //If no recognitions, it is far right pos
         if (currentRecognitions.isEmpty()) {

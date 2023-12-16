@@ -44,7 +44,7 @@ public class AutoRedExteriorBackdropMiddle extends LinearOpMode {
         //Trajectory sequences contain driving instructions
 
         TrajectorySequence dropPixelLeft = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-43, -46, Math.toRadians(-60)))
+                .lineToLinearHeading(new Pose2d(-41, -45, Math.toRadians(-60)))
                 .build();
 
         TrajectorySequence dropPixelCenter = drive.trajectorySequenceBuilder(startPose)
@@ -52,14 +52,14 @@ public class AutoRedExteriorBackdropMiddle extends LinearOpMode {
                 .build();
 
         TrajectorySequence dropPixelRight = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-33, -46, Math.toRadians(-130)))
+                .lineToLinearHeading(new Pose2d(-33, -44, Math.toRadians(-130)))
                 .build();
 
         TrajectorySequence driveToBoardLeft = drive.trajectorySequenceBuilder(dropPixelLeft.end())
                 .lineToLinearHeading(new Pose2d(-32, -42, Math.toRadians(-90)))
                 .lineToLinearHeading(new Pose2d(-32, -12, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(48, -30, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(48, -34, Math.toRadians(180)))
                 .addDisplacementMarker(60, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
@@ -69,7 +69,7 @@ public class AutoRedExteriorBackdropMiddle extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-54, -35, Math.toRadians(-90)))
                 .lineToLinearHeading(new Pose2d(-54, -12, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(48, -36, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(48, -38, Math.toRadians(180)))
                 .addDisplacementMarker(60, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
@@ -79,8 +79,8 @@ public class AutoRedExteriorBackdropMiddle extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-42, -43, Math.toRadians(-90)))
                 .lineToLinearHeading(new Pose2d(-42, -12, Math.toRadians(180)))
                 .lineToLinearHeading(new Pose2d(35, -12, Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(48, -42, Math.toRadians(180)))
-                .addDisplacementMarker(60, () -> {
+                .lineToLinearHeading(new Pose2d(48, -40, Math.toRadians(180)))
+                .addDisplacementMarker(70, () -> {
                     arm.extendAndDrop(LiftArm.Distance.AUTO);
                 })
                 .build();
